@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="sr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PLAN 5+ | Organizator</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header class="topbar">
+    <h1>PLAN 5+</h1>
+    <p>Sve sekcije su u jednom redu. Klikni naslov sekcije da je proširiš kao prozor.</p>
+  </header>
+
+  <main class="board" aria-label="Plan sekcije">
+    <details class="panel">
+      <summary>
+        <span class="panel-number">1.</span>
+        <span class="panel-title">Stranica</span>
+      </summary>
+      <section class="panel-content">
+        <h2>Datum</h2>
+        <p class="date">14.02.2026</p>
+
+        <h3>Dnevna to-do lista</h3>
+        <ul class="check-list">
+          <li><input type="checkbox" id="d1"><label for="d1">Završiti 3 najvažnije obaveze</label></li>
+          <li><input type="checkbox" id="d2"><label for="d2">Odgovoriti na poruke/mailove</label></li>
+          <li><input type="checkbox" id="d3"><label for="d3">Kratka fizička aktivnost</label></li>
+          <li><input type="checkbox" id="d4"><label for="d4">Plan za sutra</label></li>
+        </ul>
+      </section>
+    </details>
+
+    <details class="panel">
+      <summary>
+        <span class="panel-number">2.</span>
+        <span class="panel-title">Obaveze</span>
+      </summary>
+      <section class="panel-content">
+        <div class="priority-group">
+          <h3 class="p-high">Hitno</h3>
+          <ul class="dot-list">
+            <li>Predaja seminara</li>
+            <li>Uplata računa</li>
+            <li>Poziv mentoru</li>
+          </ul>
+        </div>
+
+        <div class="priority-group">
+          <h3 class="p-mid">Važno</h3>
+          <ul class="dot-list">
+            <li>Priprema prezentacije</li>
+            <li>Nabavka za sedmicu</li>
+            <li>Vježbanje 45 min</li>
+          </ul>
+        </div>
+
+        <div class="priority-group">
+          <h3 class="p-low">Može da sačeka</h3>
+          <ul class="dot-list">
+            <li>Sređivanje ormara</li>
+            <li>Backup fotografija</li>
+            <li>Organizacija desktopa</li>
+          </ul>
+        </div>
+      </section>
+    </details>
+
+    <details class="panel">
+      <summary>
+        <span class="panel-number">3.</span>
+        <span class="panel-title">Sedmični raspored</span>
+      </summary>
+      <section class="panel-content">
+        <table>
+          <caption>Ponedjeljak – Nedjelja</caption>
+          <thead>
+            <tr>
+              <th>Dan</th>
+              <th>Aktivnosti</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>Pon</td><td><span class="tag predavanje">Predavanje</span> 09:00</td></tr>
+            <tr><td>Uto</td><td><span class="tag vjezbe">Vježbe</span> 11:00</td></tr>
+            <tr><td>Sri</td><td><span class="tag trening">Trening</span> 18:00</td></tr>
+            <tr><td>Čet</td><td><span class="tag obaveza">Lične obaveze</span></td></tr>
+            <tr><td>Pet</td><td><span class="tag predavanje">Predavanje</span> 10:00</td></tr>
+            <tr><td>Sub</td><td><span class="tag slobodno">Odmor / fleksibilno</span></td></tr>
+            <tr><td>Ned</td><td><span class="tag planiranje">Planiranje sedmice</span></td></tr>
+          </tbody>
+        </table>
+      </section>
+    </details>
+
+    <details class="panel">
+      <summary>
+        <span class="panel-number">4.</span>
+        <span class="panel-title">Ispiti i rokovi</span>
+      </summary>
+      <section class="panel-content">
+        <ul class="deadline-list">
+          <li><strong>Kolokvijum hemija</strong> <span>12. mart</span></li>
+          <li><strong>Predaja završnog rada</strong> <span>20. mart</span></li>
+          <li><strong>Prijava ispita</strong> <span>25. mart</span></li>
+          <li><strong>Plaćanje školarine</strong> <span>1. april</span></li>
+        </ul>
+        <p class="hint">Savjet: drži rokove sortirane po datumu i uključi podsjetnik 2 dana ranije.</p>
+      </section>
+    </details>
+
+    <details class="panel">
+      <summary>
+        <span class="panel-number">5.</span>
+        <span class="panel-title">Kupovina i troškovi</span>
+      </summary>
+      <section class="panel-content">
+        <h3>Lista kupovine</h3>
+        <ul class="check-list">
+          <li><input type="checkbox" id="k1"><label for="k1">Mlijeko</label></li>
+          <li><input type="checkbox" id="k2"><label for="k2">Hljeb</label></li>
+          <li><input type="checkbox" id="k3"><label for="k3">Voće</label></li>
+          <li><input type="checkbox" id="k4"><label for="k4">Higijena</label></li>
+        </ul>
+
+        <h3>Troškovi</h3>
+        <div class="cost-row"><span>Budžet:</span><strong>350 KM</strong></div>
+        <div class="cost-row"><span>Potrošeno:</span><strong>124 KM</strong></div>
+      </section>
+    </details>
+
+    <details class="panel">
+      <summary>
+        <span class="panel-number">6.</span>
+        <span class="panel-title">Ostalo</span>
+      </summary>
+      <section class="panel-content">
+        <h3>Brzi zapisi</h3>
+        <textarea rows="10" placeholder="Upiši ideje, podsjetnike ili bilješke..."></textarea>
+
+        <h3>Mini podsjetnik</h3>
+        <p>Dodaj ovdje stvari koje ne spadaju ni u jednu drugu sekciju.</p>
+      </section>
+    </details>
+  </main>
+</body>
+</html>

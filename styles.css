@@ -1,0 +1,246 @@
+:root {
+  --bg: #f5f1e7;
+  --ink: #1f2937;
+  --muted: #5f6b7a;
+  --panel: #fffdf7;
+  --line: #c7bca6;
+  --accent: #315f72;
+  --urgent: #a23b3b;
+  --important: #345b93;
+  --wait: #5f7d51;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: "Segoe UI", Roboto, Arial, sans-serif;
+  color: var(--ink);
+  background: var(--bg);
+}
+
+.topbar {
+  padding: 1.2rem 1rem 0.6rem;
+  text-align: center;
+}
+
+.topbar h1 {
+  margin: 0;
+  letter-spacing: 0.08em;
+  color: var(--accent);
+}
+
+.topbar p {
+  margin: 0.4rem 0 0;
+  color: var(--muted);
+  font-size: 0.95rem;
+}
+
+.board {
+  display: flex;
+  gap: 0.9rem;
+  padding: 1rem;
+  overflow-x: auto;
+  align-items: flex-start;
+  min-height: calc(100vh - 90px);
+}
+
+.panel {
+  min-width: 280px;
+  width: 280px;
+  background: var(--panel);
+  border: 2px solid var(--line);
+  border-radius: 14px;
+  box-shadow: 0 3px 14px rgba(56, 48, 34, 0.08);
+  transition: transform 0.2s ease;
+}
+
+.panel:hover {
+  transform: translateY(-2px);
+}
+
+.panel > summary {
+  list-style: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.9rem;
+  border-bottom: 1px dashed var(--line);
+  font-weight: 700;
+}
+
+.panel > summary::-webkit-details-marker {
+  display: none;
+}
+
+.panel-number {
+  color: var(--accent);
+}
+
+.panel-title {
+  text-transform: uppercase;
+  font-size: 0.94rem;
+}
+
+.panel-content {
+  padding: 0.9rem;
+}
+
+.panel-content h2,
+.panel-content h3 {
+  margin: 0.4rem 0 0.6rem;
+}
+
+.date {
+  margin-top: 0;
+  font-weight: 700;
+  color: var(--accent);
+}
+
+.check-list,
+.dot-list,
+.deadline-list {
+  margin: 0;
+  padding-left: 0;
+  list-style: none;
+}
+
+.check-list li,
+.dot-list li {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  margin-bottom: 0.5rem;
+}
+
+.check-list input[type="checkbox"] {
+  accent-color: var(--accent);
+}
+
+.priority-group {
+  margin-bottom: 1rem;
+}
+
+.p-high { color: var(--urgent); }
+.p-mid { color: var(--important); }
+.p-low { color: var(--wait); }
+
+.dot-list li::before {
+  content: "•";
+  color: var(--line);
+  font-size: 1.2rem;
+  line-height: 1;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9rem;
+}
+
+caption {
+  text-align: left;
+  margin-bottom: 0.5rem;
+  color: var(--muted);
+  font-weight: 600;
+}
+
+th,
+td {
+  border: 1px solid var(--line);
+  padding: 0.42rem;
+  vertical-align: top;
+}
+
+th {
+  background: #f2ebdd;
+}
+
+.tag {
+  display: inline-block;
+  font-size: 0.78rem;
+  border-radius: 999px;
+  padding: 0.16rem 0.5rem;
+  border: 1px solid transparent;
+}
+
+.predavanje { background: #dce8ff; border-color: #89a9e6; }
+.vjezbe { background: #ffe4e4; border-color: #df9696; }
+.trening { background: #ece0ff; border-color: #a797d9; }
+.obaveza { background: #fff0dc; border-color: #d3ad73; }
+.slobodno { background: #ecf2d7; border-color: #a6c06f; }
+.planiranje { background: #d8f2ef; border-color: #7fbdb7; }
+
+.deadline-list li {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.45rem 0;
+  border-bottom: 1px dashed var(--line);
+}
+
+.deadline-list span {
+  color: var(--accent);
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.hint {
+  margin: 0.8rem 0 0;
+  font-size: 0.9rem;
+  color: var(--muted);
+}
+
+.cost-row {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 0.4rem;
+}
+
+textarea {
+  width: 100%;
+  resize: vertical;
+  border-radius: 10px;
+  border: 1px solid var(--line);
+  background: #fffcf6;
+  padding: 0.65rem;
+  font: inherit;
+}
+
+.panel[open] {
+  position: fixed;
+  z-index: 25;
+  inset: 7vh 8vw;
+  width: auto;
+  min-width: auto;
+  max-width: none;
+  height: 86vh;
+  overflow: auto;
+  box-shadow: 0 22px 45px rgba(0, 0, 0, 0.22);
+}
+
+.panel[open] > summary {
+  position: sticky;
+  top: 0;
+  background: var(--panel);
+  z-index: 1;
+}
+
+.panel[open] .panel-content {
+  padding-bottom: 1.3rem;
+}
+
+@media (max-width: 900px) {
+  .panel {
+    min-width: 250px;
+    width: 250px;
+  }
+
+  .panel[open] {
+    inset: 4vh 4vw;
+    height: 90vh;
+  }
+}
