@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="sr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PLAN 5+ | Pocetna</title>
+  <link rel="stylesheet" href="../shared/ui/styles.css" />
+  <style>
+    .home {
+      max-width: 960px;
+      margin: 0 auto;
+      padding: 2rem 1.2rem 3rem;
+    }
+
+    .home h2 {
+      margin: 0.4rem 0 1.6rem;
+      color: var(--accent);
+    }
+
+    .menu-grid {
+      display: grid;
+      gap: 1rem;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    }
+
+    .menu-card {
+      display: flex;
+      flex-direction: column;
+      gap: 0.6rem;
+      padding: 1rem;
+      border: 2px solid var(--line);
+      border-radius: 14px;
+      background: var(--panel);
+      text-decoration: none;
+      color: inherit;
+      box-shadow: 0 3px 12px rgba(56, 48, 34, 0.08);
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .menu-card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 10px 20px rgba(56, 48, 34, 0.12);
+    }
+
+    .menu-card span {
+      color: var(--muted);
+      font-size: 0.9rem;
+    }
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <h1>PLAN 5+</h1>
+    <p>Dobrodosli. Izaberi sekciju da nastavis.</p>
+  </header>
+
+  <main class="home" aria-label="Pocetna stranica">
+    <h2>Meni</h2>
+    <div class="menu-grid">
+      <a class="menu-card" href="index.html#stranica">
+        <strong>1. Stranica</strong>
+        <span>Datum i dnevna to-do lista</span>
+      </a>
+      <a class="menu-card" href="index.html#obaveze">
+        <strong>2. Obaveze</strong>
+        <span>Prioriteti: hitno, vazno, moze da saceka</span>
+      </a>
+      <a class="menu-card" href="index.html#raspored">
+        <strong>3. Sedmicni raspored</strong>
+        <span>Plan po danima</span>
+      </a>
+      <a class="menu-card" href="index.html#ispiti">
+        <strong>4. Ispiti i rokovi</strong>
+        <span>Rokovi i podsjetnici</span>
+      </a>
+      <a class="menu-card" href="index.html#kupovina">
+        <strong>5. Kupovina i troskovi</strong>
+        <span>Lista i budzet</span>
+      </a>
+      <a class="menu-card" href="index.html#ostalo">
+        <strong>6. Ostalo</strong>
+        <span>Brzi zapisi i biljeske</span>
+      </a>
+    </div>
+  </main>
+</body>
+</html>

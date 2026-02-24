@@ -20,15 +20,16 @@
       </summary>
       <section class="panel-content">
         <h2>Datum</h2>
-        <p class="date">14.02.2026</p>
-
         <h3>Dnevna to-do lista</h3>
-        <ul class="check-list">
-          <li><input type="checkbox" id="d1"><label for="d1">Završiti 3 najvažnije obaveze</label></li>
-          <li><input type="checkbox" id="d2"><label for="d2">Odgovoriti na poruke/mailove</label></li>
-          <li><input type="checkbox" id="d3"><label for="d3">Kratka fizička aktivnost</label></li>
-          <li><input type="checkbox" id="d4"><label for="d4">Plan za sutra</label></li>
-        </ul>
+                <p class="date" id="day-date"></p>
+        
+        <h3>Dnevna to-do lista</h3>
+        <ul id="todo-list"></ul>
+        
+        <div class="todo-actions">
+          <input id="todo-input" type="text" placeholder="Nova stavka..." />
+          <button id="add-todo">Dodaj</button>
+        </div>
       </section>
     </details>
 
@@ -144,5 +145,6 @@
       </section>
     </details>
   </main>
+  <script src="./index.js"></script>
 </body>
 </html>
