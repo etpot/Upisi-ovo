@@ -2,8 +2,9 @@ const API_BASE = "http://127.0.0.1:8000";
 
 const todoList = document.getElementById("todo-list");
 const todoInput = document.getElementById("todo-input");
-const addTodoBtn = document.getElementById("add-todo");
+const addTodoBtn = document.getElementById("add-todo-btn");
 const dayDateEl = document.getElementById("day-date");
+const form = document.getElementById("todo-form");
 
 let currentDayId = null;
 let currentDate = null;
@@ -28,6 +29,10 @@ async function loadDay(dateIso) {
     await createDay(dateIso);
     return loadDay(dateIso);
   }
+  if (!res.ok) {
+    console.error("loadDay failed:", res.status, await res.text());
+    return;
+  }
 
   const data = await res.json();
   currentDayId = data.id;
@@ -36,11 +41,16 @@ async function loadDay(dateIso) {
 }
 
 async function createDay(dateIso) {
-  await fetch(`${API_BASE}/todo/day-pages`, {
+  const res = await fetch(`${API_BASE}/todo/day-pages`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ date: dateIso, note: "" })
+    body: JSON.stringify({ date: dateIso, note: "" }),
   });
+
+  // 201 = kreiran, 409 = već postoji (oba su OK za naš flow)
+  if (![201, 409].includes(res.status)) {
+    console.error("createDay failed:", res.status, await res.text());
+  }
 }
 
 function renderTodos(todos) {
@@ -52,8 +62,7 @@ function renderTodos(todos) {
 
     checkbox.type = "checkbox";
     checkbox.checked = todo.done;
-    checkbox.dataset.id = todo.id;
-
+    checkbox.dataset.id = String(todo.id);
     label.textContent = todo.title;
 
     li.appendChild(checkbox);
@@ -62,42 +71,56 @@ function renderTodos(todos) {
   });
 }
 
-todoList.addEventListener("change", async (event) => {
-  if (event.target.tagName !== "INPUT") return;
-
-  const todoId = event.target.dataset.id;
-  const done = event.target.checked;
-
-  await fetch(`${API_BASE}/todo/items/${todoId}`, {
-    method: "PATCH",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ done })
-  });
-});
-
-addTodoBtn.addEventListener("click", async () => {
+async function addTodo() {
   const title = todoInput.value.trim();
   if (!title || !currentDayId) return;
 
   const res = await fetch(`${API_BASE}/todo/day-pages/${currentDayId}/items`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ title, done: false, position: 0 })
+    body: JSON.stringify({ title, done: false, position: 0 }),
   });
 
-  const newItem = await res.json();
-  todoInput.value = "";
+  if (!res.ok) {
+    console.error("addTodo failed:", res.status, await res.text());
+    return;
+  }
 
-  // Dodaj novu stavku odmah u UI bez reload-a
-  renderTodos([...document.querySelectorAll("#todo-list li")].map(li => ({
-    id: li.querySelector("input").dataset.id,
-    title: li.querySelector("label").textContent,
-    done: li.querySelector("input").checked,
-    position: 0
-  })).concat([newItem]));
+  todoInput.value = "";
+  await loadDay(currentDate);
+}
+
+form?.addEventListener("submit", async (e) => {
+  e.preventDefault();
+  await addTodo();
+});
+
+addTodoBtn?.addEventListener("click", async (e) => {
+  e.preventDefault();
+  await addTodo();
+});
+
+todoList?.addEventListener("change", async (event) => {
+  const target = event.target;
+  if (!(target instanceof HTMLInputElement) || target.type !== "checkbox") return;
+
+  const todoId = target.dataset.id;
+  const done = target.checked;
+
+  const res = await fetch(`${API_BASE}/todo/items/${todoId}`, {
+    method: "PATCH",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ done }),
+  });
+
+  if (!res.ok) {
+    console.error("patch todo failed:", res.status, await res.text());
+    return;
+  }
+
+  await loadDay(currentDate);
 });
 
 document.addEventListener("DOMContentLoaded", () => {
-  const today = formatDateISO(new Date());
-  loadDay(today);
+  loadDay(formatDateISO(new Date()));
 });

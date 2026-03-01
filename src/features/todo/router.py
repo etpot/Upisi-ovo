@@ -34,8 +34,7 @@ def read_day_page(target_date: date, db: Session = Depends(get_db)):
 def create_todo_item(day_page_id: int, payload: schemas.TodoItemCreate, db: Session = Depends(get_db)):
     day_page_exists = db.get(DayPage, day_page_id)
     if not day_page_exists:
-        raise HTTPException(status_code=404, detail="Day page not found.")
-
+        raise HTTPException(status_code=404, detail="Day page not found.") 
     todo = crud.add_todo_item(db, day_page_id, payload)
     return todo
 
