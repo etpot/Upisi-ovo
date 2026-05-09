@@ -1,21 +1,18 @@
 # UpisiOvo
 
-Jednostavna full-stack aplikacija za dnevni plan i TODO stavke.
+Simple full-stack application for daily planning, TODO items, and task management.
 
-## Tehnologije
+## Technologies
 
 - **Backend:** FastAPI + SQLAlchemy
 - **Frontend:** HTML/CSS/JS (static files)
-- **Baza:** SQLite (preko SQLAlchemy engine-a)
+- **Database:** SQLite (via SQLAlchemy)
 
 ---
 
-## Pokretanje projekta (Linux)
+## Running the Project (Linux)
 
-## 1) Backend
-
-Iz root foldera projekta:
-
+### 1) Backend
 ```bash
 cd /home/djordje/UpisiOvo
 python3 -m venv .venv
@@ -24,73 +21,67 @@ pip install -r requirements.txt
 uvicorn src.main:app --reload --host 127.0.0.1 --port 8000
 ```
 
-Provera da backend radi:
+Verify backend is running:
 
 - Health: `http://127.0.0.1:8000/health`
 - Swagger docs: `http://127.0.0.1:8000/docs`
 
 ---
 
-## 2) Frontend
+### 2) Frontend
 
-Pokreni static server iz root-a:
+Start a static server from the root directory:
 
 ```bash
 cd /home/djordje/UpisiOvo
 python3 -m http.server 5500 --directory src
 ```
 
-Otvori u browseru:
+Open in browser:
 
 - `http://127.0.0.1:5500/pages/index.html`
 
 ---
 
-## Na šta obratiti pažnju (najčešće greške)
+## Important Notes
 
-1. **Ne otvarati `index.html` dvoklikom (`file://...`)**
-   - Mora preko HTTP servera (npr. `python -m http.server` ili Live Server).
+- Backend runs on `127.0.0.1:8000`
+- Frontend runs on `127.0.0.1:5500` (or another port allowed in CORS)
 
-2. **CORS port mora da se poklapa**
-   - Ako frontend radi na `5501`, backend mora dozvoliti i `http://127.0.0.1:5501`.
-   - CORS podešavanja su u `src/main.py`.
+4. **`409 Conflict` on `POST /todo/day-pages` is expected**
+   - This means a page for that date already exists.
 
-3. **Backend i frontend moraju oba biti pokrenuti**
-   - Backend na `127.0.0.1:8000`
-   - Frontend na `127.0.0.1:5500` (ili drugi port koji je dozvoljen u CORS-u)
-
-4. **`409 Conflict` na `POST /todo/day-pages` je očekivano**
-   - Znači da za taj datum stranica već postoji.
-
-5. **Provera grešaka**
-   - Otvori browser DevTools (F12) -> **Console** i **Network**.
-   - Tu se odmah vidi da li je CORS, 404, 500 ili connection problem.
+5. **Debugging errors**
+   - Open browser DevTools (F12) -> **Console** and **Network** tabs.
+   - You can quickly see if it's a CORS, 404, 500, or connection issue.
 
 ---
 
-## Korisni test pozivi
+## Useful Test Calls
 
 ```bash
-# Dohvati stranicu za datum
+# Get page for a date
 curl -i http://127.0.0.1:8000/todo/day-pages/2026-03-01
 
-# Kreiraj day page
+# Create a day page
 curl -i -X POST http://127.0.0.1:8000/todo/day-pages \
   -H "Content-Type: application/json" \
   -d '{"date":"2026-03-01","note":""}'
 
-# Dodaj todo stavku (primer day_page_id=5)
+# Add a TODO item (example day_page_id=5)
 curl -i -X POST http://127.0.0.1:8000/todo/day-pages/5/items \
   -H "Content-Type: application/json" \
-  -d '{"title":"Test stavka","done":false,"position":0}'
+  -d '{"title":"Test item","done":false,"position":0}'
 ```
 
 ---
 
-## Struktura (skraćeno)
+## Project Structure (abbreviated)
 
 - `src/main.py` – FastAPI app, CORS, startup
-- `src/features/todo/` – todo modeli, CRUD, šeme, rute
+- `src/features/todo/` – todo models, CRUD, schemas, routes
+- `src/features/obligations/` – obligations models, CRUD, schemas, routes
 - `src/pages/index.html` – frontend
-- `src/pages/index.js` – frontend logika
-- `src/shared/ui/styles.css` – stilovi
+- `src/pages/index.js` – TODO logic
+- `src/pages/obligations.js` – Obligations logic
+- `src/shared/ui/styles.css` – styles

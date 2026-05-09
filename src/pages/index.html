@@ -38,13 +38,14 @@
         <span class="panel-number">2.</span>
         <span class="panel-title">Obaveze</span>
       </summary>
-      <section class="panel-content">
+      <section id="obligations-panel" class="panel-content">
         <div class="priority-group">
           <h3 class="p-high">Hitno</h3>
-          <ul class="dot-list">
-            <li>Predaja seminara</li>
-            <li>Uplata računa</li>
-            <li>Poziv mentoru</li>
+          <form id="obligation-urgent-form">
+          <input id="obligation-urgent-input" type="text" />
+          <button id="add-obligation-btn" type="button">+</button>
+        </form>
+          <ul id="obligations-urgent" class="dot-list">
           </ul>
         </div>
 
@@ -146,5 +147,6 @@
     </details>
   </main>
   <script src="./index.js"></script>
+  <script src="./obligations.js"></script>
 </body>
 </html>
