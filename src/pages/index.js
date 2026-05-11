@@ -16,9 +16,10 @@ function formatDateISO(dateObj) {
   return `${year}-${month}-${day}`;
 }
 
-function formatDateHuman(isoDate) {
-  const [y, m, d] = isoDate.split("-");
-  return `${d}.${m}.${y}`;
+function formatDateDisplay(dateStr) {
+  // Convert YYYY-MM-DD to DD-MM-YYYY for display
+  const [year, month, day] = dateStr.split("-");
+  return `${day}-${month}-${year}`;
 }
 
 async function loadDay(dateIso) {
@@ -36,7 +37,7 @@ async function loadDay(dateIso) {
 
   const data = await res.json();
   currentDayId = data.id;
-  dayDateEl.textContent = formatDateHuman(data.date);
+  dayDateEl.textContent = formatDateDisplay(data.date);
   renderTodos(data.todos);
 }
 
@@ -47,7 +48,6 @@ async function createDay(dateIso) {
     body: JSON.stringify({ date: dateIso, note: "" }),
   });
 
-  // 201 = kreiran, 409 = već postoji (oba su OK za naš flow)
   if (![201, 409].includes(res.status)) {
     console.error("createDay failed:", res.status, await res.text());
   }

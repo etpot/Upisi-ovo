@@ -5,6 +5,7 @@ from src.features.todo.models import Base
 from src.features.todo.router import router as todo_router
 from src.store.database import engine
 
+
 app = FastAPI(title="UpisiOvo API", version="0.1.0")
 
 app.add_middleware(
@@ -32,3 +33,5 @@ def health_check() -> dict[str, str]:
 
 
 app.include_router(todo_router)
+
+
