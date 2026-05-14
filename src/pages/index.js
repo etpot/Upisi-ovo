@@ -7,6 +7,8 @@ const dayDateEl = document.getElementById("day-date");
 const form = document.getElementById("todo-form");
 const loadTodosDiv = document.getElementById("load-todos-div");
 const loadTodosList = document.getElementById("load-todos-list");
+const clearDoneBtn = document.getElementById("clear-done-todos-btn");
+const clearOldBtn = document.getElementById("clear-old-todos-btn");
 
 let currentDayId = null;
 let currentDate = null;
@@ -146,6 +148,29 @@ async function addTodo() {
   todoInput.value = "";
   await loadDay(currentDate);
 }
+async function clearDoneTodos() {
+  console.log("clearDoneTodos called, currentDayId:", currentDayId);
+  if (!currentDayId) return;
+
+  const url = `${API_BASE}/todo/day-pages/${currentDayId}/clear-done`;
+  console.log("Sending DELETE to:", url);
+
+  const res = await fetch(url, {
+    method: "DELETE",
+  });
+
+  console.log("Response status:", res.status);
+
+  if (!res.ok) {
+    const errorText = await res.text();
+    console.error("clearDoneTodos failed:", res.status, errorText);
+    return;
+  }
+
+  console.log("Delete successful, reloading day...");
+  await loadDay(currentDate);
+  console.log("Day reloaded");
+}
 
 form?.addEventListener("submit", async (e) => {
   e.preventDefault();
@@ -155,6 +180,15 @@ form?.addEventListener("submit", async (e) => {
 addTodoBtn?.addEventListener("click", async (e) => {
   e.preventDefault();
   await addTodo();
+});
+
+clearDoneBtn?.addEventListener("click", async (e) => {
+  e.preventDefault();
+  await clearDoneTodos();
+});
+clearDoneBtn?.addEventListener("submit", async (e) => {
+  e.preventDefault();
+  await clearDoneTodos();
 });
 
 todoList?.addEventListener("change", async (event) => {
@@ -182,3 +216,8 @@ document.addEventListener("DOMContentLoaded", () => {
   loadDay(formatDateISO(new Date()));
   loadAllDayPages();
 });
+
+// expose for manual testing from DevTools
+window.clearDoneTodos = clearDoneTodos;
+window.loadDay = loadDay; // opcionalno za ručno testiranje refresh-a
+// expose functions only; call them manually from DevTools when needed

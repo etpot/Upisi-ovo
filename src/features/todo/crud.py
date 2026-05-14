@@ -1,4 +1,4 @@
-from datetime import date
+from datetime import date, datetime, timedelta
 
 from sqlalchemy import select
 from sqlalchemy.orm import Session
@@ -67,3 +67,22 @@ def update_todo_item(db: Session, todo: TodoItem, payload: TodoItemUpdate) -> To
 def delete_todo_item(db: Session, todo: TodoItem) -> None:
     db.delete(todo)
     db.commit()
+
+def delete_done_todos(db: Session, day_page_id: int) -> None:
+    cutoff = datetime.utcnow() - timedelta(days=2)
+    print(f"[delete_done_todos] day_page_id={day_page_id}, cutoff={cutoff}")
+    
+    statement = select(TodoItem).where(
+        TodoItem.day_page_id == day_page_id,
+        TodoItem.done.is_(True),
+        TodoItem.created_at < cutoff,
+    )
+    done_todos = db.scalars(statement).all()
+    print(f"[delete_done_todos] Found {len(done_todos)} todos to delete")
+    
+    for todo in done_todos:
+        print(f"[delete_done_todos] Deleting todo ID={todo.id}: {todo.title}")
+        db.delete(todo)
+    
+    db.commit()
+    print(f"[delete_done_todos] Commit complete")

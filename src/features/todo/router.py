@@ -61,3 +61,7 @@ def remove_todo_item(todo_id: int, db: Session = Depends(get_db)):
         raise HTTPException(status_code=404, detail="Todo item not found.")
 
     crud.delete_todo_item(db, todo)
+
+@router.delete("/day-pages/{day_page_id}/clear-done", status_code=status.HTTP_204_NO_CONTENT)
+def clear_done_todos(day_page_id: int, db: Session = Depends(get_db)):
+    crud.delete_done_todos(db, day_page_id)
