@@ -30,6 +30,11 @@ def read_day_page(target_date: date, db: Session = Depends(get_db)):
     return day_page
 
 
+@router.get("/day-pages/", response_model=list[schemas.DayPageRead])
+def list_day_pages(db: Session = Depends(get_db)):
+    return crud.list_day_pages(db)
+
+
 @router.post("/day-pages/{day_page_id}/items", response_model=schemas.TodoItemRead, status_code=status.HTTP_201_CREATED)
 def create_todo_item(day_page_id: int, payload: schemas.TodoItemCreate, db: Session = Depends(get_db)):
     day_page_exists = db.get(DayPage, day_page_id)

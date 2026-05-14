@@ -5,6 +5,8 @@ const todoInput = document.getElementById("todo-input");
 const addTodoBtn = document.getElementById("add-todo-btn");
 const dayDateEl = document.getElementById("day-date");
 const form = document.getElementById("todo-form");
+const loadTodosDiv = document.getElementById("load-todos-div");
+const loadTodosList = document.getElementById("load-todos-list");
 
 let currentDayId = null;
 let currentDate = null;
@@ -17,7 +19,6 @@ function formatDateISO(dateObj) {
 }
 
 function formatDateDisplay(dateStr) {
-  // Convert YYYY-MM-DD to DD-MM-YYYY for display
   const [year, month, day] = dateStr.split("-");
   return `${day}-${month}-${year}`;
 }
@@ -39,6 +40,18 @@ async function loadDay(dateIso) {
   currentDayId = data.id;
   dayDateEl.textContent = formatDateDisplay(data.date);
   renderTodos(data.todos);
+}
+
+async function loadAllDayPages() {
+  const res = await fetch(`${API_BASE}/todo/day-pages/`);
+
+  if (!res.ok) {
+    console.error("loadAllDayPages failed:", res.status, await res.text());
+    return;
+  }
+
+  const dayPages = await res.json();
+  renderDayPages(dayPages.filter((dayPage) => dayPage.date !== currentDate));
 }
 
 async function createDay(dateIso) {
@@ -68,6 +81,50 @@ function renderTodos(todos) {
     li.appendChild(checkbox);
     li.appendChild(label);
     todoList.appendChild(li);
+  });
+}
+
+function renderDayPages(dayPages) {
+  loadTodosList.innerHTML = "";
+
+  if (dayPages.length === 0) {
+    const emptyItem = document.createElement("li");
+    emptyItem.textContent = "There's no saved pages.";
+    loadTodosList.appendChild(emptyItem);
+    return;
+  }
+
+  dayPages.forEach((dayPage) => {
+    const item = document.createElement("li");
+    const title = document.createElement("h3");
+    const date = document.createElement("p");
+    const todos = document.createElement("ul");
+
+    item.className = "loaded-day-page";
+    title.textContent = "Dnevna to-do lista";
+    date.className = "date";
+    date.textContent = formatDateDisplay(dayPage.date);
+    todos.id = `todo-list-${dayPage.id}`;
+
+    dayPage.todos.forEach((todo) => {
+      const todoItem = document.createElement("li");
+      const checkbox = document.createElement("input");
+      const label = document.createElement("label");
+
+      checkbox.type = "checkbox";
+      checkbox.checked = todo.done;
+      checkbox.disabled = true;
+      label.textContent = todo.title;
+
+      todoItem.appendChild(checkbox);
+      todoItem.appendChild(label);
+      todos.appendChild(todoItem);
+    });
+
+    item.appendChild(title);
+    item.appendChild(date);
+    item.appendChild(todos);
+    loadTodosList.appendChild(item);
   });
 }
 
@@ -123,4 +180,5 @@ todoList?.addEventListener("change", async (event) => {
 
 document.addEventListener("DOMContentLoaded", () => {
   loadDay(formatDateISO(new Date()));
+  loadAllDayPages();
 });

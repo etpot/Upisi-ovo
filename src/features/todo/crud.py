@@ -2,6 +2,7 @@ from datetime import date
 
 from sqlalchemy import select
 from sqlalchemy.orm import Session
+from sqlalchemy.orm import selectinload
 
 from src.features.todo.models import DayPage, TodoItem
 from src.features.todo.schemas import DayPageCreate, TodoItemCreate, TodoItemUpdate
@@ -18,6 +19,20 @@ def create_day_page(db: Session, payload: DayPageCreate) -> DayPage:
 def get_day_page_by_date(db: Session, target_date: date) -> DayPage | None:
     statement = select(DayPage).where(DayPage.date == target_date)
     return db.scalar(statement)
+
+
+def list_day_pages(db: Session) -> list[DayPage]:
+    statement = (
+        select(DayPage)
+        .options(selectinload(DayPage.todos))
+        .order_by(DayPage.date.desc(), DayPage.created_at.desc())
+    )
+    day_pages = list(db.scalars(statement).all())
+
+    for day_page in day_pages:
+        day_page.todos.sort(key=lambda todo: todo.position)
+
+    return day_pages
 
 
 def add_todo_item(db: Session, day_page_id: int, payload: TodoItemCreate) -> TodoItem:
