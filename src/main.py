@@ -3,6 +3,7 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from src.features.todo.models import Base
 from src.features.todo.router import router as todo_router
+from src.features.obligations.router_ob import router as obligations_router
 from src.store.database import engine
 
 
@@ -33,5 +34,4 @@ def health_check() -> dict[str, str]:
 
 
 app.include_router(todo_router)
-
-
+app.include_router(obligations_router)

@@ -9,9 +9,14 @@ const loadTodosDiv = document.getElementById("load-todos-div");
 const loadTodosList = document.getElementById("load-todos-list");
 const clearDoneBtn = document.getElementById("clear-done-todos-btn");
 const clearOldBtn = document.getElementById("clear-old-todos-btn");
+const editModeBtn = document.getElementById("edit-mode-btn");
+const deleteSelectedBtn = document.getElementById("delete-selected-btn");
 
 let currentDayId = null;
 let currentDate = null;
+let currentTodos = [];
+let isEditMode = false;
+let selectedTodoIds = new Set();
 
 function formatDateISO(dateObj) {
   const year = dateObj.getFullYear();
@@ -40,8 +45,9 @@ async function loadDay(dateIso) {
 
   const data = await res.json();
   currentDayId = data.id;
+  currentTodos = data.todos;
   dayDateEl.textContent = formatDateDisplay(data.date);
-  renderTodos(data.todos);
+  renderTodos(currentTodos);
 }
 
 async function loadAllDayPages() {
@@ -53,7 +59,14 @@ async function loadAllDayPages() {
   }
 
   const dayPages = await res.json();
-  renderDayPages(dayPages.filter((dayPage) => dayPage.date !== currentDate));
+  renderDayPages(
+    dayPages.filter((dayPage) => dayPage.date !== currentDate && dayPage.todos.length > 0)
+  );
+}
+
+async function refreshTodoViews() {
+  await loadDay(currentDate);
+  await loadAllDayPages();
 }
 
 async function createDay(dateIso) {
@@ -75,15 +88,39 @@ function renderTodos(todos) {
     const checkbox = document.createElement("input");
     const label = document.createElement("label");
 
-    checkbox.type = "checkbox";
-    checkbox.checked = todo.done;
-    checkbox.dataset.id = String(todo.id);
+    if (isEditMode) {
+      checkbox.type = "checkbox";
+      checkbox.checked = selectedTodoIds.has(todo.id);
+      checkbox.dataset.selectId = String(todo.id);
+    } else {
+      checkbox.type = "checkbox";
+      checkbox.checked = todo.done;
+      checkbox.dataset.id = String(todo.id);
+    }
+
+    label.className = todo.done ? "todo-done" : "";
     label.textContent = todo.title;
 
     li.appendChild(checkbox);
     li.appendChild(label);
     todoList.appendChild(li);
   });
+}
+
+function setEditMode(active) {
+  isEditMode = active;
+  selectedTodoIds = new Set();
+
+  if (editModeBtn) {
+    editModeBtn.textContent = active ? "Završi edit" : "Edit";
+  }
+
+  if (deleteSelectedBtn) {
+    deleteSelectedBtn.hidden = !active;
+    deleteSelectedBtn.disabled = active;
+  }
+
+  renderTodos(currentTodos);
 }
 
 function renderDayPages(dayPages) {
@@ -146,20 +183,15 @@ async function addTodo() {
   }
 
   todoInput.value = "";
-  await loadDay(currentDate);
+  await refreshTodoViews();
 }
-async function clearDoneTodos() {
-  console.log("clearDoneTodos called, currentDayId:", currentDayId);
-  if (!currentDayId) return;
 
-  const url = `${API_BASE}/todo/day-pages/${currentDayId}/clear-done`;
-  console.log("Sending DELETE to:", url);
+async function clearDoneTodos() {
+  const url = `${API_BASE}/todo/day-pages/clear-done`;
 
   const res = await fetch(url, {
     method: "DELETE",
   });
-
-  console.log("Response status:", res.status);
 
   if (!res.ok) {
     const errorText = await res.text();
@@ -167,9 +199,42 @@ async function clearDoneTodos() {
     return;
   }
 
-  console.log("Delete successful, reloading day...");
-  await loadDay(currentDate);
-  console.log("Day reloaded");
+  await refreshTodoViews();
+}
+
+async function clearOldTodos() {
+  const url = `${API_BASE}/todo/day-pages/clear-done/older-than?days=3`;
+
+  const res = await fetch(url, {
+    method: "DELETE",
+  });
+
+  if (!res.ok) {
+    const errorText = await res.text();
+    console.error("clearOldTodos failed:", res.status, errorText);
+    return;
+  }
+
+  await refreshTodoViews();
+}
+
+async function deleteSelectedTodos() {
+  if (!isEditMode || selectedTodoIds.size === 0) return;
+
+  const deleteRequests = Array.from(selectedTodoIds).map((todoId) =>
+    fetch(`${API_BASE}/todo/items/${todoId}`, { method: "DELETE" })
+  );
+
+  const results = await Promise.all(deleteRequests);
+  const failed = results.find((res) => !res.ok);
+
+  if (failed) {
+    console.error("deleteSelectedTodos failed:", failed.status, await failed.text());
+    return;
+  }
+
+  setEditMode(false);
+  await refreshTodoViews();
 }
 
 form?.addEventListener("submit", async (e) => {
@@ -186,14 +251,39 @@ clearDoneBtn?.addEventListener("click", async (e) => {
   e.preventDefault();
   await clearDoneTodos();
 });
-clearDoneBtn?.addEventListener("submit", async (e) => {
+
+clearOldBtn?.addEventListener("click", async (e) => {
   e.preventDefault();
-  await clearDoneTodos();
+  await clearOldTodos();
+});
+
+editModeBtn?.addEventListener("click", (e) => {
+  e.preventDefault();
+  setEditMode(!isEditMode);
+});
+
+deleteSelectedBtn?.addEventListener("click", async (e) => {
+  e.preventDefault();
+  await deleteSelectedTodos();
 });
 
 todoList?.addEventListener("change", async (event) => {
   const target = event.target;
   if (!(target instanceof HTMLInputElement) || target.type !== "checkbox") return;
+
+  if (isEditMode && target.dataset.selectId) {
+    const todoId = Number(target.dataset.selectId);
+    if (target.checked) {
+      selectedTodoIds.add(todoId);
+    } else {
+      selectedTodoIds.delete(todoId);
+    }
+
+    if (deleteSelectedBtn) {
+      deleteSelectedBtn.disabled = selectedTodoIds.size === 0;
+    }
+    return;
+  }
 
   const todoId = target.dataset.id;
   const done = target.checked;
@@ -209,7 +299,7 @@ todoList?.addEventListener("change", async (event) => {
     return;
   }
 
-  await loadDay(currentDate);
+  await refreshTodoViews();
 });
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -219,5 +309,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
 // expose for manual testing from DevTools
 window.clearDoneTodos = clearDoneTodos;
+window.clearOldTodos = clearOldTodos;
+window.deleteSelectedTodos = deleteSelectedTodos;
 window.loadDay = loadDay; // opcionalno za ručno testiranje refresh-a
-// expose functions only; call them manually from DevTools when needed

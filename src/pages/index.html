@@ -21,14 +21,17 @@
       <section class="panel-content">
         <button id="clear-done-todos-btn" type="button">Obriši završene</button>
         <button id="clear-old-todos-btn" type="button">Obriši starije od 3 dana</button>
+        <button id="edit-mode-btn" type="button">Edit</button>
+        <button id="delete-selected-btn" type="button" hidden>Obriši selektovane</button>
         <h3>Dnevna to-do lista</h3>
-                <p class="date" id="day-date"></p>
-        <ul id="todo-list"></ul>
-        
         <form id="todo-form">
           <input id="todo-input" type="text" />
           <button id="add-todo-btn" type="button">Dodaj</button>
         </form>
+                <p></p>
+                <p class="date" id="day-date"></p>
+        <ul id="todo-list"></ul>
+        
         <div id="load-todos-div">
           <ul id="load-todos-list"></ul>
         </div>

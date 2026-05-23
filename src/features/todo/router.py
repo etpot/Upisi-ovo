@@ -62,6 +62,11 @@ def remove_todo_item(todo_id: int, db: Session = Depends(get_db)):
 
     crud.delete_todo_item(db, todo)
 
-@router.delete("/day-pages/{day_page_id}/clear-done", status_code=status.HTTP_204_NO_CONTENT)
-def clear_done_todos(day_page_id: int, db: Session = Depends(get_db)):
-    crud.delete_done_todos(db, day_page_id)
+@router.delete("/day-pages/clear-done", status_code=status.HTTP_204_NO_CONTENT)
+def clear_done_todos(db: Session = Depends(get_db)):
+    crud.delete_all_done_todos(db)
+
+
+@router.delete("/day-pages/clear-done/older-than", status_code=status.HTTP_204_NO_CONTENT)
+def clear_done_todos_older_than(days: int = 3, db: Session = Depends(get_db)):
+    crud.delete_done_todos_older_than(db, days)
