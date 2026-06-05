@@ -1,11 +1,12 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from src.features.todo.models import Base
+from src.features.todo.models import Base as TodoBase
 from src.features.todo.router import router as todo_router
-from src.features.obligations.router_ob import router as obligations_router
 from src.store.database import engine
 
+from src.features.obligations.models_ob import Base as ObligationsBase
+from src.features.obligations.router_ob import router as obligations_router
 
 app = FastAPI(title="UpisiOvo API", version="0.1.0")
 
@@ -25,7 +26,8 @@ app.add_middleware(
 
 @app.on_event("startup")
 def on_startup() -> None:
-    Base.metadata.create_all(bind=engine)
+    TodoBase.metadata.create_all(bind=engine)
+    ObligationsBase.metadata.create_all(bind=engine)
 
 
 @app.get("/health")

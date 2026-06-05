@@ -21,6 +21,14 @@ pip install -r requirements.txt
 uvicorn src.main:app --reload --host 127.0.0.1 --port 8000
 ```
 
+Run backend from any directory:
+
+```bash
+/home/djordje/UpisiOvo/run_backend.sh
+```
+
+The script uses `.venv` automatically and will prompt you to install requirements if missing.
+
 Verify backend is running:
 
 - Health: `http://127.0.0.1:8000/health`
@@ -47,6 +55,11 @@ Open in browser:
 
 - Backend runs on `127.0.0.1:8000`
 - Frontend runs on `127.0.0.1:5500` (or another port allowed in CORS)
+- Obligations create payloads accept optional `created_at` (defaults to UTC ISO string)
+- If you change obligation models/relations, delete `app.db` so tables are recreated:
+  ```bash
+  rm /home/djordje/UpisiOvo/app.db
+  ```
 
 4. **`409 Conflict` on `POST /todo/day-pages` is expected**
    - This means a page for that date already exists.

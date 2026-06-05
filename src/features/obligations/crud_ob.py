@@ -2,7 +2,7 @@ from sqlalchemy import select
 from sqlalchemy.orm import Session
 
 from src.features.obligations.models_ob import Obligation, ObligationItem
-from src.features.obligations.schemas_ob import ObligationCreate, ObligationItemCreate, Obligation
+from src.features.obligations.schemas_ob import ObligationCreate, ObligationItemCreate, ObligationUpdate
 
 def create_obligation(db: Session, payload: ObligationCreate) -> Obligation:
     obligation = Obligation(
@@ -28,10 +28,10 @@ def add_obligation_item(db: Session, obligation_id: int, payload: ObligationItem
     return obligation_item
 
 def get_obligation_by_id(db: Session, obligation_id: int) -> Obligation | None:
-    statement = select(Obligation).where(Obligation.id == obligation_id)
-    return db.scalar(statement)
+    statement = (select(Obligation).options(selectinload(Obligation.obligation_items))
+    .where(Obligation.id==obligation_id))
 
-def update_obligation(db: Session, obligation: Obligation, payload: ObligationCreate) -> Obligation:
+def update_obligation(db: Session, obligation: Obligation, payload: ObligationUpdate) -> Obligation:
     updates = payload.model_dump(exclude_unset=True)
     for field_name, value in updates.items():
         setattr(obligation, field_name, value)
@@ -44,3 +44,13 @@ def update_obligation(db: Session, obligation: Obligation, payload: ObligationCr
 def delete_obligation(db: Session, obligation: Obligation) -> None:
     db.delete(obligation)
     db.commit()
+
+def list_obligations(db:Session, title: str | None = None)-> list[Obligations]:
+    if title:
+        statement = statement.where(Obligation.title==title)
+    return list(db.scalars(statement).all())
+
+def get_obligation_by_title(db: Session, title:str)->Obligation | None:
+    statement=statement.where(Obligation.title==title)
+    return db.scalar(statement)
+
