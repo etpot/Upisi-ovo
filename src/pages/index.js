@@ -2,20 +2,17 @@ const API_BASE = "http://127.0.0.1:8000";
 
 const todoList = document.getElementById("todo-list");
 const todoInput = document.getElementById("todo-input");
-const addTodoBtn = document.getElementById("add-todo-btn");
 const dayDateEl = document.getElementById("day-date");
 const form = document.getElementById("todo-form");
 const loadTodosDiv = document.getElementById("load-todos-div");
 const loadTodosList = document.getElementById("load-todos-list");
-const clearDoneBtn = document.getElementById("clear-done-todos-btn");
-const clearOldBtn = document.getElementById("clear-old-todos-btn");
-const editModeBtn = document.getElementById("edit-mode-btn");
-const deleteSelectedBtn = document.getElementById("delete-selected-btn");
+const todoDeleteModeBtn = document.getElementById("todo-delete-mode-btn");
 
 let currentDayId = null;
 let currentDate = null;
 let currentTodos = [];
-let isEditMode = false;
+let loadedDayPages = [];
+let isDeleteMode = false;
 let selectedTodoIds = new Set();
 
 function formatDateISO(dateObj) {
@@ -28,6 +25,94 @@ function formatDateISO(dateObj) {
 function formatDateDisplay(dateStr) {
   const [year, month, day] = dateStr.split("-");
   return `${day}-${month}-${year}`;
+}
+
+function renderTodoList(listElement, todos, { deleteMode, readOnly }) {
+  listElement.innerHTML = "";
+
+  todos.forEach((todo) => {
+    const li = document.createElement("li");
+    const doneCheckbox = document.createElement("input");
+    const label = document.createElement("label");
+
+    if (deleteMode) {
+      const deleteCheckbox = document.createElement("input");
+
+      deleteCheckbox.type = "checkbox";
+      deleteCheckbox.className = "todo-delete-checkbox";
+      deleteCheckbox.checked = selectedTodoIds.has(todo.id);
+      deleteCheckbox.dataset.selectId = String(todo.id);
+
+      doneCheckbox.type = "checkbox";
+      doneCheckbox.checked = todo.done;
+      doneCheckbox.dataset.id = String(todo.id);
+      doneCheckbox.disabled = Boolean(readOnly);
+
+      li.appendChild(deleteCheckbox);
+      li.appendChild(doneCheckbox);
+    } else {
+      doneCheckbox.type = "checkbox";
+      doneCheckbox.checked = todo.done;
+      doneCheckbox.dataset.id = String(todo.id);
+      doneCheckbox.disabled = Boolean(readOnly);
+
+      li.appendChild(doneCheckbox);
+    }
+
+    label.className = todo.done ? "todo-done" : "";
+    label.textContent = todo.title;
+
+    li.appendChild(label);
+    listElement.appendChild(li);
+  });
+}
+
+function renderTodos(todos) {
+  renderTodoList(todoList, todos, { deleteMode: isDeleteMode, readOnly: false });
+}
+
+function renderDayPages(dayPages) {
+  loadTodosList.innerHTML = "";
+
+  if (dayPages.length === 0) {
+    return;
+  }
+
+  dayPages.forEach((dayPage) => {
+    const item = document.createElement("li");
+    const date = document.createElement("p");
+    const todos = document.createElement("ul");
+
+    item.className = "loaded-day-page";
+    date.className = "date";
+    date.textContent = formatDateDisplay(dayPage.date);
+    todos.id = `todo-list-${dayPage.id}`;
+
+    renderTodoList(todos, dayPage.todos, {
+      deleteMode: isDeleteMode,
+      readOnly: true,
+    });
+
+    item.appendChild(date);
+    item.appendChild(todos);
+    loadTodosList.appendChild(item);
+  });
+}
+
+function setDeleteMode(active) {
+  isDeleteMode = active;
+  selectedTodoIds = new Set();
+
+  if (todoDeleteModeBtn) {
+    todoDeleteModeBtn.classList.toggle("is-active", active);
+  }
+
+  todoList?.classList.toggle("is-delete-mode", active);
+  loadTodosList?.classList.toggle("is-delete-mode", active);
+  loadTodosDiv?.classList.toggle("is-delete-mode", active);
+
+  renderTodos(currentTodos);
+  renderDayPages(loadedDayPages);
 }
 
 async function loadDay(dateIso) {
@@ -59,9 +144,10 @@ async function loadAllDayPages() {
   }
 
   const dayPages = await res.json();
-  renderDayPages(
-    dayPages.filter((dayPage) => dayPage.date !== currentDate && dayPage.todos.length > 0)
+  loadedDayPages = dayPages.filter(
+    (dayPage) => dayPage.date !== currentDate && dayPage.todos.length > 0,
   );
+  renderDayPages(loadedDayPages);
 }
 
 async function refreshTodoViews() {
@@ -79,92 +165,6 @@ async function createDay(dateIso) {
   if (![201, 409].includes(res.status)) {
     console.error("createDay failed:", res.status, await res.text());
   }
-}
-
-function renderTodos(todos) {
-  todoList.innerHTML = "";
-  todos.forEach((todo) => {
-    const li = document.createElement("li");
-    const checkbox = document.createElement("input");
-    const label = document.createElement("label");
-
-    if (isEditMode) {
-      checkbox.type = "checkbox";
-      checkbox.checked = selectedTodoIds.has(todo.id);
-      checkbox.dataset.selectId = String(todo.id);
-    } else {
-      checkbox.type = "checkbox";
-      checkbox.checked = todo.done;
-      checkbox.dataset.id = String(todo.id);
-    }
-
-    label.className = todo.done ? "todo-done" : "";
-    label.textContent = todo.title;
-
-    li.appendChild(checkbox);
-    li.appendChild(label);
-    todoList.appendChild(li);
-  });
-}
-
-function setEditMode(active) {
-  isEditMode = active;
-  selectedTodoIds = new Set();
-
-  if (editModeBtn) {
-    editModeBtn.textContent = active ? "Završi edit" : "Edit";
-  }
-
-  if (deleteSelectedBtn) {
-    deleteSelectedBtn.hidden = !active;
-    deleteSelectedBtn.disabled = active;
-  }
-
-  renderTodos(currentTodos);
-}
-
-function renderDayPages(dayPages) {
-  loadTodosList.innerHTML = "";
-
-  if (dayPages.length === 0) {
-    const emptyItem = document.createElement("li");
-    emptyItem.textContent = "There's no saved pages.";
-    loadTodosList.appendChild(emptyItem);
-    return;
-  }
-
-  dayPages.forEach((dayPage) => {
-    const item = document.createElement("li");
-    const title = document.createElement("h3");
-    const date = document.createElement("p");
-    const todos = document.createElement("ul");
-
-    item.className = "loaded-day-page";
-    title.textContent = "Dnevna to-do lista";
-    date.className = "date";
-    date.textContent = formatDateDisplay(dayPage.date);
-    todos.id = `todo-list-${dayPage.id}`;
-
-    dayPage.todos.forEach((todo) => {
-      const todoItem = document.createElement("li");
-      const checkbox = document.createElement("input");
-      const label = document.createElement("label");
-
-      checkbox.type = "checkbox";
-      checkbox.checked = todo.done;
-      checkbox.disabled = true;
-      label.textContent = todo.title;
-
-      todoItem.appendChild(checkbox);
-      todoItem.appendChild(label);
-      todos.appendChild(todoItem);
-    });
-
-    item.appendChild(title);
-    item.appendChild(date);
-    item.appendChild(todos);
-    loadTodosList.appendChild(item);
-  });
 }
 
 async function addTodo() {
@@ -186,43 +186,11 @@ async function addTodo() {
   await refreshTodoViews();
 }
 
-async function clearDoneTodos() {
-  const url = `${API_BASE}/todo/day-pages/clear-done`;
-
-  const res = await fetch(url, {
-    method: "DELETE",
-  });
-
-  if (!res.ok) {
-    const errorText = await res.text();
-    console.error("clearDoneTodos failed:", res.status, errorText);
-    return;
-  }
-
-  await refreshTodoViews();
-}
-
-async function clearOldTodos() {
-  const url = `${API_BASE}/todo/day-pages/clear-done/older-than?days=3`;
-
-  const res = await fetch(url, {
-    method: "DELETE",
-  });
-
-  if (!res.ok) {
-    const errorText = await res.text();
-    console.error("clearOldTodos failed:", res.status, errorText);
-    return;
-  }
-
-  await refreshTodoViews();
-}
-
 async function deleteSelectedTodos() {
-  if (!isEditMode || selectedTodoIds.size === 0) return;
+  if (!isDeleteMode || selectedTodoIds.size === 0) return false;
 
   const deleteRequests = Array.from(selectedTodoIds).map((todoId) =>
-    fetch(`${API_BASE}/todo/items/${todoId}`, { method: "DELETE" })
+    fetch(`${API_BASE}/todo/items/${todoId}`, { method: "DELETE" }),
   );
 
   const results = await Promise.all(deleteRequests);
@@ -230,11 +198,27 @@ async function deleteSelectedTodos() {
 
   if (failed) {
     console.error("deleteSelectedTodos failed:", failed.status, await failed.text());
+    return false;
+  }
+
+  setDeleteMode(false);
+  await refreshTodoViews();
+  return true;
+}
+
+async function handleDeleteModeButton() {
+  if (!isDeleteMode) {
+    setDeleteMode(true);
+    void loadAllDayPages();
     return;
   }
 
-  setEditMode(false);
-  await refreshTodoViews();
+  if (selectedTodoIds.size === 0) {
+    setDeleteMode(false);
+    return;
+  }
+
+  await deleteSelectedTodos();
 }
 
 form?.addEventListener("submit", async (e) => {
@@ -242,73 +226,55 @@ form?.addEventListener("submit", async (e) => {
   await addTodo();
 });
 
-addTodoBtn?.addEventListener("click", async (e) => {
+todoDeleteModeBtn?.addEventListener("click", async (e) => {
   e.preventDefault();
-  await addTodo();
+  await handleDeleteModeButton();
 });
 
-clearDoneBtn?.addEventListener("click", async (e) => {
-  e.preventDefault();
-  await clearDoneTodos();
-});
-
-clearOldBtn?.addEventListener("click", async (e) => {
-  e.preventDefault();
-  await clearOldTodos();
-});
-
-editModeBtn?.addEventListener("click", (e) => {
-  e.preventDefault();
-  setEditMode(!isEditMode);
-});
-
-deleteSelectedBtn?.addEventListener("click", async (e) => {
-  e.preventDefault();
-  await deleteSelectedTodos();
-});
-
-todoList?.addEventListener("change", async (event) => {
+function handleTodoCheckboxChange(event) {
   const target = event.target;
   if (!(target instanceof HTMLInputElement) || target.type !== "checkbox") return;
 
-  if (isEditMode && target.dataset.selectId) {
+  if (isDeleteMode && target.dataset.selectId) {
     const todoId = Number(target.dataset.selectId);
     if (target.checked) {
       selectedTodoIds.add(todoId);
     } else {
       selectedTodoIds.delete(todoId);
     }
-
-    if (deleteSelectedBtn) {
-      deleteSelectedBtn.disabled = selectedTodoIds.size === 0;
-    }
     return;
   }
 
   const todoId = target.dataset.id;
+  if (!todoId) return;
+
   const done = target.checked;
 
-  const res = await fetch(`${API_BASE}/todo/items/${todoId}`, {
+  fetch(`${API_BASE}/todo/items/${todoId}`, {
     method: "PATCH",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ done }),
-  });
+  })
+    .then(async (res) => {
+      if (!res.ok) {
+        console.error("patch todo failed:", res.status, await res.text());
+        return;
+      }
 
-  if (!res.ok) {
-    console.error("patch todo failed:", res.status, await res.text());
-    return;
-  }
+      await refreshTodoViews();
+    })
+    .catch((error) => {
+      console.error("patch todo failed:", error);
+    });
+}
 
-  await refreshTodoViews();
+todoList?.addEventListener("change", handleTodoCheckboxChange);
+loadTodosList?.addEventListener("change", handleTodoCheckboxChange);
+
+document.addEventListener("DOMContentLoaded", async () => {
+  await loadDay(formatDateISO(new Date()));
+  await loadAllDayPages();
 });
 
-document.addEventListener("DOMContentLoaded", () => {
-  loadDay(formatDateISO(new Date()));
-  loadAllDayPages();
-});
-
-// expose for manual testing from DevTools
-window.clearDoneTodos = clearDoneTodos;
-window.clearOldTodos = clearOldTodos;
 window.deleteSelectedTodos = deleteSelectedTodos;
-window.loadDay = loadDay; // opcionalno za ručno testiranje refresh-a
+window.loadDay = loadDay;
