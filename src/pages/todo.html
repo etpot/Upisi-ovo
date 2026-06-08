@@ -3,16 +3,16 @@
     <head>
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>Upisi ovo</title>
+        <title>TODO — Upisi ovo</title>
         <link
             rel="icon"
-            href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Crect width='16' height='16' rx='3' fill='%23315f72'/%3E%3Cpath d='M4 8h8' stroke='white' stroke-width='2' stroke-linecap='round'/%3E%3C/svg%3E"
+            href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Crect width='16' height='16' rx='3' fill='%232d6a4f'/%3E%3Crect x='4' y='4' width='8' height='8' fill='white'/%3E%3C/svg%3E"
         />
         <link rel="stylesheet" href="../shared/ui/styles.css" />
     </head>
-    <body>
+    <body class="page-todo">
         <nav class="topnav">
-            <a href="todo.html" class="topnav-segment topnav-todo">
+            <a href="todo.html" class="topnav-segment topnav-todo active">
                 <svg viewBox="0 0 24 24" fill="white" xmlns="http://www.w3.org/2000/svg">
                     <rect x="4" y="4" width="16" height="16" rx="1"/>
                 </svg>
@@ -46,36 +46,41 @@
             </a>
         </nav>
 
-        <div class="home-grid">
-            <a href="todo.html" class="home-tile home-tile-todo">
-                <svg viewBox="0 0 24 24" fill="white" xmlns="http://www.w3.org/2000/svg">
-                    <rect x="3" y="3" width="18" height="18" rx="2"/>
-                </svg>
-                <span class="home-tile-label">TODO</span>
-            </a>
-            <a href="obligations.html" class="home-tile home-tile-oblig">
-                <svg viewBox="0 0 24 24" fill="white" xmlns="http://www.w3.org/2000/svg">
-                    <polygon points="12,2 22,22 2,22"/>
-                </svg>
-                <span class="home-tile-label">OBLIGATIONS</span>
-            </a>
-            <a href="calendar.html" class="home-tile home-tile-cal">
-                <svg viewBox="0 0 24 24" stroke="white" stroke-width="2.5" fill="none" stroke-linecap="round" xmlns="http://www.w3.org/2000/svg">
-                    <line x1="5" y1="5" x2="19" y2="19"/>
-                    <line x1="19" y1="5" x2="5" y2="19"/>
-                </svg>
-                <span class="home-tile-label">CALENDAR</span>
-            </a>
-            <a href="notes.html" class="home-tile home-tile-notes">
-                <svg viewBox="0 0 24 24" fill="#1f2937" xmlns="http://www.w3.org/2000/svg">
-                    <circle cx="12" cy="12" r="9"/>
-                </svg>
-                <span class="home-tile-label">NOTES</span>
-            </a>
-        </div>
+        <header class="section-header section-header-todo">
+            <h1>TODO</h1>
+        </header>
+
+        <main class="section-content">
+            <h3>Dnevna to-do lista</h3>
+            <form id="todo-form" class="todo-entry-form">
+                <input id="todo-input" type="text" />
+                <div class="todo-action-row">
+                    <button id="add-todo-btn" type="submit">
+                        Dodaj
+                    </button>
+                    <button
+                        id="todo-delete-mode-btn"
+                        class="todo-delete-mode-btn"
+                        type="button"
+                        data-delete-mode-toggle="true"
+                        aria-label="Uključi brisanje"
+                        title="Uključi brisanje"
+                    >
+                        X
+                    </button>
+                </div>
+            </form>
+            <p></p>
+            <p class="date" id="day-date"></p>
+            <ul id="todo-list"></ul>
+
+            <div id="load-todos-div">
+                <ul id="load-todos-list"></ul>
+            </div>
+        </main>
 
         <nav class="bottombar" aria-label="Mobilna navigacija">
-            <a href="todo.html" class="bottombar-segment bottombar-todo">
+            <a href="todo.html" class="bottombar-segment bottombar-todo active">
                 <svg viewBox="0 0 24 24" fill="white" xmlns="http://www.w3.org/2000/svg">
                     <rect x="4" y="4" width="16" height="16" rx="1"/>
                 </svg>
@@ -103,5 +108,7 @@
                 </svg>
             </a>
         </nav>
+
+        <script src="./index.js"></script>
     </body>
 </html>

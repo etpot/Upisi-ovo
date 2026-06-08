@@ -8,10 +8,18 @@
     --urgent: #a23b3b;
     --important: #345b93;
     --wait: #5f7d51;
+    --todo-clr: #2d6a4f;
+    --oblig-clr: #a23b3b;
+    --cal-clr: #1e3a6e;
+    --notes-clr: #b07d10;
 }
 
 * {
     box-sizing: border-box;
+}
+
+html {
+    zoom: 1.65;
 }
 
 body {
@@ -460,3 +468,289 @@ textarea {
 [id^="todo-list"] li {
     list-style: none;
 }
+
+/* ─── Top Navigation Bar ─────────────────────────────────────── */
+
+.topnav {
+    display: flex;
+    height: 80px;
+    position: sticky;
+    top: 0;
+    z-index: 50;
+}
+
+.topnav-segment {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.4rem;
+    text-decoration: none;
+    border: none;
+    padding: 0.5rem 0.3rem;
+    transition: filter 0.15s;
+    cursor: default;
+}
+
+a.topnav-segment { cursor: pointer; }
+a.topnav-segment:hover { filter: brightness(1.18); }
+.topnav-segment.active { filter: brightness(1.3); }
+
+.topnav-segment-label {
+    font-weight: 700;
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    color: white;
+}
+
+.topnav-segment svg {
+    width: 28px;
+    height: 28px;
+}
+
+.topnav-todo  { background: var(--todo-clr); }
+.topnav-oblig { background: var(--oblig-clr); }
+.topnav-add   { background: #6b7280; }
+.topnav-cal   { background: var(--cal-clr); }
+.topnav-notes { background: #c9a227; }
+.topnav-notes .topnav-segment-label { color: #1f2937; }
+
+/* ─── Bottom Navigation Bar (mobile only) ────────────────────── */
+
+.bottombar {
+    display: none;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 58px;
+    z-index: 100;
+}
+
+.bottombar-segment {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    cursor: pointer;
+    border: none;
+    padding: 0;
+    background: transparent;
+    transition: filter 0.15s;
+}
+
+.bottombar-segment svg {
+    width: 26px;
+    height: 26px;
+}
+
+.bottombar-todo  { background: var(--todo-clr); }
+.bottombar-oblig { background: var(--oblig-clr); }
+.bottombar-add   { background: #6b7280; }
+.bottombar-cal   { background: var(--cal-clr); }
+.bottombar-notes { background: #c9a227; }
+
+.bottombar-segment.active {
+    filter: brightness(1.35);
+}
+
+@media (max-width: 768px) {
+    .bottombar { display: flex; }
+    .topnav { display: none; }
+    body { padding-bottom: 58px; }
+}
+
+/* ─── Dashboard ──────────────────────────────────────────────── */
+
+.dashboard-welcome {
+    padding: 1.2rem 1.4rem 0.4rem;
+    color: var(--muted);
+    font-size: 0.95rem;
+}
+
+.dashboard-cards {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1rem;
+    padding: 0.8rem 1.4rem 1.5rem;
+}
+
+@media (max-width: 900px) {
+    .dashboard-cards { grid-template-columns: repeat(2, 1fr); }
+}
+
+@media (max-width: 480px) {
+    .dashboard-cards { grid-template-columns: 1fr; }
+}
+
+.dashboard-card {
+    background: var(--panel);
+    border: 2px solid var(--line);
+    border-radius: 14px;
+    padding: 1.1rem;
+    min-height: 140px;
+    box-shadow: 0 3px 14px rgba(56, 48, 34, 0.08);
+    text-decoration: none;
+    color: var(--ink);
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    transition: transform 0.15s, box-shadow 0.15s;
+}
+
+.dashboard-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(56, 48, 34, 0.14);
+}
+
+.dashboard-card-label {
+    font-size: 0.82rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    padding-bottom: 0.45rem;
+    border-bottom: 2px solid currentColor;
+}
+
+.card-todo  { color: var(--todo-clr); }
+.card-oblig { color: var(--oblig-clr); }
+.card-cal   { color: var(--cal-clr); }
+.card-notes { color: #b07d10; }
+
+.dashboard-card-body {
+    flex: 1;
+    color: var(--muted);
+    font-size: 0.88rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* ─── Section Pages ──────────────────────────────────────────── */
+
+.section-header {
+    padding: 1rem 1.5rem;
+}
+
+.section-header h1 {
+    margin: 0;
+    font-size: 1.35rem;
+    letter-spacing: 0.06em;
+    color: white;
+}
+
+.section-header-todo  { background: var(--todo-clr); }
+.section-header-oblig { background: var(--oblig-clr); }
+.section-header-cal   { background: var(--cal-clr); }
+.section-header-notes { background: #c9a227; color: #1f2937; }
+
+.section-header-notes h1 { color: #1f2937; }
+
+.section-content {
+    padding: 1.2rem 1.5rem;
+    max-width: 680px;
+}
+
+.section-placeholder {
+    color: var(--muted);
+    font-size: 0.95rem;
+    margin: 1.5rem 0;
+}
+
+/* ─── Section Page Themed Backgrounds ───────────────────────── */
+
+body.page-todo  { background: var(--todo-clr); }
+body.page-oblig { background: var(--oblig-clr); }
+body.page-cal   { background: var(--cal-clr); }
+body.page-notes { background: #c9a227; }
+
+body.page-todo .section-header,
+body.page-oblig .section-header,
+body.page-cal .section-header,
+body.page-notes .section-header {
+    background: rgba(0, 0, 0, 0.22);
+}
+
+body.page-todo .section-content,
+body.page-oblig .section-content,
+body.page-cal .section-content,
+body.page-notes .section-content {
+    background: var(--panel);
+    border-radius: 16px;
+    margin: 1rem 1.2rem 1.5rem;
+    max-width: none;
+    box-shadow: 0 6px 28px rgba(0, 0, 0, 0.22);
+}
+
+/* ─── Topnav Home Tab (hangs below gray + segment) ──────────── */
+
+.topnav-add {
+    position: relative;
+}
+
+.topnav-home-tab {
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #4b5563;
+    padding: 0.3rem 0.9rem;
+    border-radius: 0 0 10px 10px;
+    text-decoration: none;
+    color: white;
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    white-space: nowrap;
+    z-index: 51;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.25);
+    transition: filter 0.15s;
+}
+
+.topnav-home-tab:hover {
+    filter: brightness(1.25);
+}
+
+/* ─── Home Page 2×2 Grid ─────────────────────────────────────── */
+
+.home-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr 1fr;
+    min-height: calc(100vh - 80px);
+}
+
+.home-tile {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    gap: 0.9rem;
+    transition: filter 0.15s;
+}
+
+.home-tile:hover { filter: brightness(1.12); }
+
+.home-tile svg {
+    width: 56px;
+    height: 56px;
+}
+
+.home-tile-label {
+    font-size: 1.1rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: white;
+}
+
+.home-tile-todo  { background: var(--todo-clr); }
+.home-tile-oblig { background: var(--oblig-clr); }
+.home-tile-cal   { background: var(--cal-clr); }
+.home-tile-notes { background: #c9a227; }
+.home-tile-notes .home-tile-label { color: #1f2937; }
