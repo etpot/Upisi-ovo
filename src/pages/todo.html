@@ -6,7 +6,7 @@
         <title>TODO — Upisi ovo</title>
         <link
             rel="icon"
-            href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Crect width='16' height='16' rx='3' fill='%232d6a4f'/%3E%3Crect x='4' y='4' width='8' height='8' fill='white'/%3E%3C/svg%3E"
+            href="../shared/ui/logo.png"
         />
         <link rel="stylesheet" href="../shared/ui/styles.css" />
     </head>
@@ -24,13 +24,9 @@
                 </svg>
                 <span class="topnav-segment-label">OBLIGATIONS</span>
             </a>
-            <span class="topnav-segment topnav-add">
-                <svg viewBox="0 0 24 24" stroke="white" stroke-width="3" fill="none" stroke-linecap="round" xmlns="http://www.w3.org/2000/svg">
-                    <line x1="12" y1="5" x2="12" y2="19"/>
-                    <line x1="5" y1="12" x2="19" y2="12"/>
-                </svg>
-                <a href="index.html" class="topnav-home-tab">HOME</a>
-            </span>
+            <a href="index.html" class="topnav-segment topnav-add" aria-label="Pocetna">
+                <img src="../shared/ui/logo.png" alt="Pocetna" class="topnav-logo" />
+            </a>
             <a href="calendar.html" class="topnav-segment topnav-cal">
                 <svg viewBox="0 0 24 24" stroke="white" stroke-width="3" fill="none" stroke-linecap="round" xmlns="http://www.w3.org/2000/svg">
                     <line x1="6" y1="6" x2="18" y2="18"/>
@@ -90,11 +86,8 @@
                     <polygon points="12,3 22,21 2,21"/>
                 </svg>
             </a>
-            <a href="index.html" class="bottombar-segment bottombar-add">
-                <svg viewBox="0 0 24 24" stroke="white" stroke-width="3" fill="none" stroke-linecap="round" xmlns="http://www.w3.org/2000/svg">
-                    <line x1="12" y1="5" x2="12" y2="19"/>
-                    <line x1="5" y1="12" x2="19" y2="12"/>
-                </svg>
+            <a href="index.html" class="bottombar-segment bottombar-add" aria-label="Pocetna">
+                <img src="../shared/ui/logo.png" alt="Pocetna" class="bottombar-logo" />
             </a>
             <a href="calendar.html" class="bottombar-segment bottombar-cal">
                 <svg viewBox="0 0 24 24" stroke="white" stroke-width="3" fill="none" stroke-linecap="round" xmlns="http://www.w3.org/2000/svg">
@@ -110,5 +103,7 @@
         </nav>
 
         <script src="./index.js"></script>
+        <script src="./cube-nav.js"></script>
+
     </body>
 </html>

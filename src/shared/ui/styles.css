@@ -685,34 +685,20 @@ body.page-notes .section-content {
     box-shadow: 0 6px 28px rgba(0, 0, 0, 0.22);
 }
 
-/* ─── Topnav Home Tab (hangs below gray + segment) ──────────── */
+/* ─── Home segment logo (gray center segment → Home) ────────── */
 
-.topnav-add {
-    position: relative;
+.topnav-logo {
+    width: 44px;
+    height: 44px;
+    object-fit: contain;
+    border-radius: 10px;
 }
 
-.topnav-home-tab {
-    position: absolute;
-    top: 100%;
-    left: 50%;
-    transform: translateX(-50%);
-    background: #4b5563;
-    padding: 0.3rem 0.9rem;
-    border-radius: 0 0 10px 10px;
-    text-decoration: none;
-    color: white;
-    font-size: 0.72rem;
-    font-weight: 700;
-    letter-spacing: 0.06em;
-    text-transform: uppercase;
-    white-space: nowrap;
-    z-index: 51;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.25);
-    transition: filter 0.15s;
-}
-
-.topnav-home-tab:hover {
-    filter: brightness(1.25);
+.bottombar-logo {
+    width: 32px;
+    height: 32px;
+    object-fit: contain;
+    border-radius: 7px;
 }
 
 /* ─── Home Page 2×2 Grid ─────────────────────────────────────── */
@@ -721,6 +707,8 @@ body.page-notes .section-content {
     display: grid;
     grid-template-columns: 1fr 1fr;
     grid-template-rows: 1fr 1fr;
+    gap: 1.3rem;
+    padding: 1.5rem;
     min-height: calc(100vh - 80px);
 }
 
@@ -731,10 +719,15 @@ body.page-notes .section-content {
     justify-content: center;
     text-decoration: none;
     gap: 0.9rem;
-    transition: filter 0.15s;
+    border-radius: 18px;
+    box-shadow: 0 6px 20px rgba(56, 48, 34, 0.16);
+    transition: transform 0.15s, filter 0.15s;
 }
 
-.home-tile:hover { filter: brightness(1.12); }
+.home-tile:hover {
+    filter: brightness(1.12);
+    transform: translateY(-3px);
+}
 
 .home-tile svg {
     width: 56px;
@@ -754,3 +747,93 @@ body.page-notes .section-content {
 .home-tile-cal   { background: var(--cal-clr); }
 .home-tile-notes { background: #c9a227; }
 .home-tile-notes .home-tile-label { color: #1f2937; }
+
+/* ─── 3D Cube Page Rotation ─────────────────────────────────── */
+
+body {
+    /* allow vertical scroll, let JS handle horizontal cube drags */
+    touch-action: pan-y;
+}
+
+.cube-dragging {
+    user-select: none;
+    -webkit-user-select: none;
+    cursor: grabbing;
+}
+
+.cube-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+    overflow: hidden;
+    perspective: 130vw;
+    background: #15171c;
+    display: none;
+}
+
+.cube-overlay.active {
+    display: block;
+}
+
+.cube-scene {
+    position: absolute;
+    inset: 0;
+    transform-style: preserve-3d;
+    transform: translateZ(-50vw) rotateY(0deg);
+    will-change: transform;
+}
+
+.cube-scene.animate {
+    transition: transform 0.34s cubic-bezier(0.33, 0, 0.2, 1);
+}
+
+.cube-face {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 1.3rem;
+    backface-visibility: hidden;
+}
+
+.cube-face-front { transform: rotateY(0deg)   translateZ(50vw); }
+.cube-face-right { transform: rotateY(90deg)  translateZ(50vw); }
+.cube-face-left  { transform: rotateY(-90deg) translateZ(50vw); }
+
+.cube-face img,
+.cube-enter img {
+    width: 92px;
+    height: 92px;
+    border-radius: 20px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
+}
+
+.cube-face-name {
+    font-size: 2.1rem;
+    font-weight: 800;
+    letter-spacing: 0.14em;
+    color: #ffffff;
+    text-transform: uppercase;
+    text-shadow: 0 2px 14px rgba(0, 0, 0, 0.3);
+}
+
+.cube-enter {
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 1.3rem;
+    pointer-events: none;
+    animation: cubeEnter 0.46s ease forwards;
+}
+
+@keyframes cubeEnter {
+    0%   { opacity: 1; transform: scale(1);    }
+    55%  { opacity: 1; transform: scale(1.03); }
+    100% { opacity: 0; transform: scale(1.06); visibility: hidden; }
+}
