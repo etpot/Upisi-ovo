@@ -48,61 +48,54 @@
 
         <main class="section-content">
             <section id="obligations-panel" class="panel-content" style="padding:0">
-                <div class="priority-group">
-                    <form
-                        id="obligation-actions-form"
-                        class="obligation-entry-form"
-                    >
-                        <input id="obligation-item-input" type="text" />
-                        <div class="obligation-action-row">
-                            <button
-                                id="urgent-btn"
-                                class="obligation-action-btn obligation-btn-urgent"
-                                type="button"
-                                data-obligation="urgent"
-                                aria-label="Dodaj u Hitno"
-                                title="Dodaj u Hitno"
-                            ></button>
-                            <button
-                                id="important-btn"
-                                class="obligation-action-btn obligation-btn-important"
-                                type="button"
-                                data-obligation="important"
-                                aria-label="Dodaj u Važno"
-                                title="Dodaj u Važno"
-                            ></button>
-                            <button
-                                id="wait-btn"
-                                class="obligation-action-btn obligation-btn-wait"
-                                type="button"
-                                data-obligation="wait"
-                                aria-label="Dodaj u Može da sačeka"
-                                title="Dodaj u Može da sačeka"
-                            ></button>
-                            <button
-                                id="obligation-delete-mode-btn"
-                                class="obligation-action-btn obligation-btn-delete-mode"
-                                type="button"
-                                data-delete-mode-toggle="true"
-                                aria-label="Uključi brisanje"
-                                title="Uključi brisanje"
-                            >
-                                X
-                            </button>
-                        </div>
-                    </form>
-                    <h3 class="p-high">Hitno</h3>
-                    <ul id="obligations-urgent" class="dot-list"></ul>
-                </div>
+                <form id="obligation-actions-form" class="obligation-entry-form">
+                    <input
+                        id="obligation-item-input"
+                        type="text"
+                        placeholder="Upiši obavezu…"
+                    />
+                    <div class="obligation-action-row">
+                        <button
+                            id="urgent-btn"
+                            class="obligation-action-btn obligation-btn-urgent"
+                            type="button"
+                            data-obligation="urgent"
+                        >Hitno</button>
+                        <button
+                            id="important-btn"
+                            class="obligation-action-btn obligation-btn-important"
+                            type="button"
+                            data-obligation="important"
+                        >Važno</button>
+                        <button
+                            id="wait-btn"
+                            class="obligation-action-btn obligation-btn-wait"
+                            type="button"
+                            data-obligation="wait"
+                        >Čeka</button>
+                        <button
+                            id="obligation-delete-mode-btn"
+                            class="obligation-action-btn obligation-btn-delete-mode"
+                            type="button"
+                            data-delete-mode-toggle="true"
+                            aria-label="Uključi brisanje"
+                        >✕</button>
+                    </div>
+                </form>
 
-                <div class="priority-group">
-                    <h3 class="p-mid">Važno</h3>
-                    <ul id="obligations-important" class="dot-list"></ul>
-                </div>
-
-                <div class="priority-group">
-                    <h3 class="p-low">Može da sačeka</h3>
-                    <ul id="obligations-wait" class="dot-list"></ul>
+                <div class="obligations-columns">
+                    <div class="priority-group">
+                        <h3 class="p-high">Hitno</h3>
+                        <ul id="obligations-urgent" class="dot-list"></ul>
+                    </div>
+                    <div class="priority-group">
+                        <h3 class="p-mid">Važno</h3>
+                        <ul id="obligations-important" class="dot-list"></ul>
+                    </div>
+                    <div class="priority-group">
+                        <h3 class="p-low">Može da sačeka</h3>
+                        <ul id="obligations-wait" class="dot-list"></ul>
+                    </div>
                 </div>
             </section>
         </main>

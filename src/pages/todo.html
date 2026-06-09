@@ -4,39 +4,63 @@
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <title>TODO — Upisi ovo</title>
-        <link
-            rel="icon"
-            href="../shared/ui/logo.png"
-        />
+        <link rel="icon" href="../shared/ui/logo.png" />
         <link rel="stylesheet" href="../shared/ui/styles.css" />
     </head>
     <body class="page-todo">
         <nav class="topnav">
             <a href="todo.html" class="topnav-segment topnav-todo active">
-                <svg viewBox="0 0 24 24" fill="white" xmlns="http://www.w3.org/2000/svg">
-                    <rect x="4" y="4" width="16" height="16" rx="1"/>
+                <svg
+                    viewBox="0 0 24 24"
+                    fill="white"
+                    xmlns="http://www.w3.org/2000/svg"
+                >
+                    <rect x="4" y="4" width="16" height="16" rx="1" />
                 </svg>
                 <span class="topnav-segment-label">TODO</span>
             </a>
             <a href="obligations.html" class="topnav-segment topnav-oblig">
-                <svg viewBox="0 0 24 24" fill="white" xmlns="http://www.w3.org/2000/svg">
-                    <polygon points="12,3 22,21 2,21"/>
+                <svg
+                    viewBox="0 0 24 24"
+                    fill="white"
+                    xmlns="http://www.w3.org/2000/svg"
+                >
+                    <polygon points="12,3 22,21 2,21" />
                 </svg>
                 <span class="topnav-segment-label">OBLIGATIONS</span>
             </a>
-            <a href="index.html" class="topnav-segment topnav-add" aria-label="Pocetna">
-                <img src="../shared/ui/logo.png" alt="Pocetna" class="topnav-logo" />
+            <a
+                href="index.html"
+                class="topnav-segment topnav-add"
+                aria-label="Pocetna"
+            >
+                <img
+                    src="../shared/ui/logo.png"
+                    alt="Pocetna"
+                    class="topnav-logo"
+                />
             </a>
             <a href="calendar.html" class="topnav-segment topnav-cal">
-                <svg viewBox="0 0 24 24" stroke="white" stroke-width="3" fill="none" stroke-linecap="round" xmlns="http://www.w3.org/2000/svg">
-                    <line x1="6" y1="6" x2="18" y2="18"/>
-                    <line x1="18" y1="6" x2="6" y2="18"/>
+                <svg
+                    viewBox="0 0 24 24"
+                    stroke="white"
+                    stroke-width="3"
+                    fill="none"
+                    stroke-linecap="round"
+                    xmlns="http://www.w3.org/2000/svg"
+                >
+                    <line x1="6" y1="6" x2="18" y2="18" />
+                    <line x1="18" y1="6" x2="6" y2="18" />
                 </svg>
                 <span class="topnav-segment-label">CALENDAR</span>
             </a>
             <a href="notes.html" class="topnav-segment topnav-notes">
-                <svg viewBox="0 0 24 24" fill="#1f2937" xmlns="http://www.w3.org/2000/svg">
-                    <circle cx="12" cy="12" r="8"/>
+                <svg
+                    viewBox="0 0 24 24"
+                    fill="#1f2937"
+                    xmlns="http://www.w3.org/2000/svg"
+                >
+                    <circle cx="12" cy="12" r="8" />
                 </svg>
                 <span class="topnav-segment-label">NOTES</span>
             </a>
@@ -51,19 +75,14 @@
             <form id="todo-form" class="todo-entry-form">
                 <input id="todo-input" type="text" />
                 <div class="todo-action-row">
-                    <button id="add-todo-btn" type="submit">
-                        Dodaj
-                    </button>
+                    <button id="add-todo-btn" type="submit">Dodaj</button>
                     <button
                         id="todo-delete-mode-btn"
                         class="todo-delete-mode-btn"
                         type="button"
                         data-delete-mode-toggle="true"
                         aria-label="Uključi brisanje"
-                        title="Uključi brisanje"
-                    >
-                        X
-                    </button>
+                    >✕</button>
                 </div>
             </form>
             <p></p>
@@ -77,33 +96,62 @@
 
         <nav class="bottombar" aria-label="Mobilna navigacija">
             <a href="todo.html" class="bottombar-segment bottombar-todo active">
-                <svg viewBox="0 0 24 24" fill="white" xmlns="http://www.w3.org/2000/svg">
-                    <rect x="4" y="4" width="16" height="16" rx="1"/>
+                <svg
+                    viewBox="0 0 24 24"
+                    fill="white"
+                    xmlns="http://www.w3.org/2000/svg"
+                >
+                    <rect x="4" y="4" width="16" height="16" rx="1" />
                 </svg>
             </a>
-            <a href="obligations.html" class="bottombar-segment bottombar-oblig">
-                <svg viewBox="0 0 24 24" fill="white" xmlns="http://www.w3.org/2000/svg">
-                    <polygon points="12,3 22,21 2,21"/>
+            <a
+                href="obligations.html"
+                class="bottombar-segment bottombar-oblig"
+            >
+                <svg
+                    viewBox="0 0 24 24"
+                    fill="white"
+                    xmlns="http://www.w3.org/2000/svg"
+                >
+                    <polygon points="12,3 22,21 2,21" />
                 </svg>
             </a>
-            <a href="index.html" class="bottombar-segment bottombar-add" aria-label="Pocetna">
-                <img src="../shared/ui/logo.png" alt="Pocetna" class="bottombar-logo" />
+            <a
+                href="index.html"
+                class="bottombar-segment bottombar-add"
+                aria-label="Pocetna"
+            >
+                <img
+                    src="../shared/ui/logo.png"
+                    alt="Pocetna"
+                    class="bottombar-logo"
+                />
             </a>
             <a href="calendar.html" class="bottombar-segment bottombar-cal">
-                <svg viewBox="0 0 24 24" stroke="white" stroke-width="3" fill="none" stroke-linecap="round" xmlns="http://www.w3.org/2000/svg">
-                    <line x1="6" y1="6" x2="18" y2="18"/>
-                    <line x1="18" y1="6" x2="6" y2="18"/>
+                <svg
+                    viewBox="0 0 24 24"
+                    stroke="white"
+                    stroke-width="3"
+                    fill="none"
+                    stroke-linecap="round"
+                    xmlns="http://www.w3.org/2000/svg"
+                >
+                    <line x1="6" y1="6" x2="18" y2="18" />
+                    <line x1="18" y1="6" x2="6" y2="18" />
                 </svg>
             </a>
             <a href="notes.html" class="bottombar-segment bottombar-notes">
-                <svg viewBox="0 0 24 24" fill="white" xmlns="http://www.w3.org/2000/svg">
-                    <circle cx="12" cy="12" r="8"/>
+                <svg
+                    viewBox="0 0 24 24"
+                    fill="white"
+                    xmlns="http://www.w3.org/2000/svg"
+                >
+                    <circle cx="12" cy="12" r="8" />
                 </svg>
             </a>
         </nav>
 
-        <script src="./index.js"></script>
+        <script src="./todo.js"></script>
         <script src="./cube-nav.js"></script>
-
     </body>
 </html>

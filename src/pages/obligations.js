@@ -222,6 +222,7 @@ async function handleObligationAction(key) {
   if (!obligationConfigs[key]) return;
 
   await addObligationItem(key);
+  obligationInput?.focus();
 }
 
 obligationForm?.addEventListener("click", async (e) => {
