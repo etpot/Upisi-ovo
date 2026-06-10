@@ -1,7 +1,25 @@
 const API_BASE_OBLIGATIONS = "http://127.0.0.1:8000";
 
 const obligationInput = document.getElementById("obligation-item-input");
+const obligationDateInput = document.getElementById("obligation-date-input");
 const obligationForm = document.getElementById("obligation-actions-form");
+
+function todayISO() {
+  const now = new Date();
+  const month = String(now.getMonth() + 1).padStart(2, "0");
+  const day = String(now.getDate()).padStart(2, "0");
+  return `${now.getFullYear()}-${month}-${day}`;
+}
+
+function formatDueDate(isoDate) {
+  if (!isoDate) return "";
+  const [year, month, day] = isoDate.split("-");
+  return `${day}.${month}.`;
+}
+
+if (obligationDateInput && !obligationDateInput.value) {
+  obligationDateInput.value = todayISO();
+}
 const obligationDeleteModeBtn = document.getElementById("obligation-delete-mode-btn");
 const obligationsPanel = document.getElementById("obligations-panel");
 
@@ -60,7 +78,16 @@ function renderObligationItems(key, items) {
       li.appendChild(checkbox);
       li.appendChild(label);
     } else {
-      li.textContent = item.title;
+      const text = document.createElement("span");
+      text.textContent = item.title;
+      li.appendChild(text);
+    }
+
+    if (item.due_date) {
+      const date = document.createElement("span");
+      date.className = "obligation-item-date";
+      date.textContent = formatDueDate(item.due_date);
+      li.appendChild(date);
     }
 
     list.appendChild(li);
@@ -161,12 +188,14 @@ async function addObligationItem(key) {
     if (!obligation) return false;
   }
 
+  const dueDate = obligationDateInput?.value || null;
+
   const res = await fetch(
     `${API_BASE_OBLIGATIONS}/obligations/${obligationState[key].id}/items`,
     {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ title, description: null }),
+      body: JSON.stringify({ title, description: null, due_date: dueDate }),
     },
   );
 

@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="sr">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Prijava — Upiši ovo</title>
+        <link rel="icon" href="../shared/ui/logo.png" />
+        <link rel="stylesheet" href="../shared/ui/styles.css" />
+    </head>
+    <body class="page-login">
+        <main class="auth-wrap">
+            <div class="auth-card">
+                <div class="auth-accent" aria-hidden="true">
+                    <span class="auth-accent-seg seg-todo"></span>
+                    <span class="auth-accent-seg seg-oblig"></span>
+                    <span class="auth-accent-seg seg-cal"></span>
+                    <span class="auth-accent-seg seg-notes"></span>
+                </div>
+
+                <div class="auth-head">
+                    <img
+                        src="../shared/ui/logo.png"
+                        alt="Upiši ovo"
+                        class="auth-logo"
+                    />
+                    <h1 class="auth-title">Upiši ovo</h1>
+                    <p class="auth-subtitle">Tvoj planer na jednom mjestu</p>
+                </div>
+
+                <div class="auth-tabs" role="tablist">
+                    <button
+                        class="auth-tab is-active"
+                        data-tab="login"
+                        type="button"
+                    >
+                        Prijava
+                    </button>
+                    <button class="auth-tab" data-tab="register" type="button">
+                        Registracija
+                    </button>
+                </div>
+
+                <form id="auth-form" class="auth-form" novalidate>
+                    <label class="auth-field" id="field-name" hidden>
+                        <span>Ime</span>
+                        <input
+                            type="text"
+                            id="auth-name"
+                            autocomplete="name"
+                            placeholder="Tvoje ime"
+                        />
+                    </label>
+                    <label class="auth-field">
+                        <span>Email</span>
+                        <input
+                            type="email"
+                            id="auth-email"
+                            autocomplete="email"
+                            required
+                            placeholder="ime@primjer.com"
+                        />
+                    </label>
+                    <label class="auth-field">
+                        <span>Lozinka</span>
+                        <input
+                            type="password"
+                            id="auth-password"
+                            autocomplete="current-password"
+                            required
+                            placeholder="••••••••"
+                        />
+                    </label>
+
+                    <p class="auth-hint" id="register-hint" hidden>
+                        Lozinka mora imati najmanje 8 karaktera.
+                    </p>
+                    <p class="auth-error" id="auth-error" hidden></p>
+
+                    <button type="submit" class="auth-submit" id="auth-submit">
+                        Prijavi se
+                    </button>
+                </form>
+
+                <div class="auth-divider"><span>ili</span></div>
+
+                <div class="auth-social">
+                    <button
+                        type="button"
+                        class="auth-social-btn auth-google"
+                        data-provider="google"
+                    >
+                        <span class="auth-social-icon">G</span>
+                        Nastavi sa Google
+                    </button>
+                    <button
+                        type="button"
+                        class="auth-social-btn auth-facebook"
+                        data-provider="facebook"
+                    >
+                        <span class="auth-social-icon">f</span>
+                        Nastavi sa Facebook
+                    </button>
+                </div>
+            </div>
+        </main>
+
+        <script src="./auth.js"></script>
+        <script src="./login.js"></script>
+    </body>
+</html>

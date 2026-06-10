@@ -19,11 +19,14 @@ class TodoItemUpdate(BaseModel):
     position: int | None = None
 
 
-class TodoItemRead(TodoItemBase):
+class TodoItemRead(BaseModel):
     model_config = ConfigDict(from_attributes=True)
 
     id: int
     day_page_id: int
+    title: str
+    done: bool = False
+    position: int = 0
 
 
 class DayPageCreate(BaseModel):

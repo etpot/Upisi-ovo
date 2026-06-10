@@ -2,7 +2,16 @@ from __future__ import annotations
 
 from datetime import date, datetime
 
-from sqlalchemy import Boolean, Date, DateTime, ForeignKey, Integer, String, func
+from sqlalchemy import (
+    Boolean,
+    Date,
+    DateTime,
+    ForeignKey,
+    Integer,
+    String,
+    UniqueConstraint,
+    func,
+)
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, relationship
 
 
@@ -12,9 +21,14 @@ class Base(DeclarativeBase):
 
 class DayPage(Base):
     __tablename__ = "day_pages"
+    # A date is unique per user, not globally.
+    __table_args__ = (
+        UniqueConstraint("user_id", "date", name="uq_day_pages_user_date"),
+    )
 
     id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
-    date: Mapped[date] = mapped_column(Date, unique=True, index=True, nullable=False)
+    user_id: Mapped[int | None] = mapped_column(Integer, index=True, nullable=True)
+    date: Mapped[date] = mapped_column(Date, index=True, nullable=False)
     note: Mapped[str | None] = mapped_column(String(500), nullable=True)
     created_at: Mapped[datetime] = mapped_column(DateTime, server_default=func.now())
 

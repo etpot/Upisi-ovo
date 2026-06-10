@@ -8,22 +8,27 @@ from src.features.todo.models import DayPage, TodoItem
 from src.features.todo.schemas import DayPageCreate, TodoItemCreate, TodoItemUpdate
 
 
-def create_day_page(db: Session, payload: DayPageCreate) -> DayPage:
-    day_page = DayPage(date=payload.date, note=payload.note)
+def create_day_page(db: Session, payload: DayPageCreate, user_id: int) -> DayPage:
+    day_page = DayPage(date=payload.date, note=payload.note, user_id=user_id)
     db.add(day_page)
     db.commit()
     db.refresh(day_page)
     return day_page
 
 
-def get_day_page_by_date(db: Session, target_date: date) -> DayPage | None:
-    statement = select(DayPage).where(DayPage.date == target_date)
+def get_day_page_by_date(
+    db: Session, target_date: date, user_id: int
+) -> DayPage | None:
+    statement = select(DayPage).where(
+        DayPage.date == target_date, DayPage.user_id == user_id
+    )
     return db.scalar(statement)
 
 
-def list_day_pages(db: Session) -> list[DayPage]:
+def list_day_pages(db: Session, user_id: int) -> list[DayPage]:
     statement = (
         select(DayPage)
+        .where(DayPage.user_id == user_id)
         .options(selectinload(DayPage.todos))
         .order_by(DayPage.date.desc(), DayPage.created_at.desc())
     )
@@ -68,9 +73,11 @@ def delete_todo_item(db: Session, todo: TodoItem) -> None:
     db.delete(todo)
     db.commit()
 
-def delete_all_done_todos(db: Session) -> int:
-    statement = select(TodoItem).where(
-        TodoItem.done.is_(True),
+def delete_all_done_todos(db: Session, user_id: int) -> int:
+    statement = (
+        select(TodoItem)
+        .join(DayPage, TodoItem.day_page_id == DayPage.id)
+        .where(TodoItem.done.is_(True), DayPage.user_id == user_id)
     )
     done_todos = db.scalars(statement).all()
 
@@ -81,11 +88,16 @@ def delete_all_done_todos(db: Session) -> int:
     return len(done_todos)
 
 
-def delete_done_todos_older_than(db: Session, days: int) -> int:
+def delete_done_todos_older_than(db: Session, days: int, user_id: int) -> int:
     cutoff = datetime.utcnow() - timedelta(days=days)
-    statement = select(TodoItem).where(
-        TodoItem.done.is_(True),
-        TodoItem.created_at < cutoff,
+    statement = (
+        select(TodoItem)
+        .join(DayPage, TodoItem.day_page_id == DayPage.id)
+        .where(
+            TodoItem.done.is_(True),
+            TodoItem.created_at < cutoff,
+            DayPage.user_id == user_id,
+        )
     )
     done_todos = db.scalars(statement).all()
 

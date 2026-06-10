@@ -11,6 +11,7 @@
         <link rel="stylesheet" href="../shared/ui/styles.css" />
     </head>
     <body class="page-oblig">
+        <script src="./auth.js"></script>
         <nav class="topnav">
             <a href="todo.html" class="topnav-segment topnav-todo">
                 <svg viewBox="0 0 24 24" fill="white" xmlns="http://www.w3.org/2000/svg">
@@ -53,6 +54,12 @@
                         id="obligation-item-input"
                         type="text"
                         placeholder="Upiši obavezu…"
+                    />
+                    <input
+                        id="obligation-date-input"
+                        type="date"
+                        class="obligation-date-input"
+                        aria-label="Datum obaveze"
                     />
                     <div class="obligation-action-row">
                         <button
