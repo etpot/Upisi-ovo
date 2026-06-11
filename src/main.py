@@ -66,6 +66,15 @@ def _ensure_schema() -> None:
             if inspector.has_table(table) and "user_id" not in column_names(table):
                 conn.execute(text(f"ALTER TABLE {table} ADD COLUMN user_id INTEGER"))
 
+        # Calendar events gained optional start/end times ("HH:MM").
+        if inspector.has_table("calendar_events"):
+            event_columns = column_names("calendar_events")
+            for col in ("start_time", "end_time"):
+                if col not in event_columns:
+                    conn.execute(
+                        text(f"ALTER TABLE calendar_events ADD COLUMN {col} VARCHAR(5)")
+                    )
+
         # day_pages used to be unique on date globally; make it per-user instead.
         if inspector.has_table("day_pages"):
             if "ix_day_pages_date" in index_names("day_pages"):
@@ -88,6 +97,27 @@ def _ensure_schema() -> None:
                         f"ON {table}(user_id)"
                     )
                 )
+
+        # users gained a unique public username; backfill older rows from their
+        # full_name (or the email local-part) before enforcing uniqueness.
+        if inspector.has_table("users"):
+            if "username" not in column_names("users"):
+                conn.execute(
+                    text("ALTER TABLE users ADD COLUMN username VARCHAR(50)")
+                )
+                conn.execute(
+                    text(
+                        "UPDATE users SET username = "
+                        "COALESCE(full_name, substr(email, 1, instr(email, '@') - 1)) "
+                        "WHERE username IS NULL OR username = ''"
+                    )
+                )
+            conn.execute(
+                text(
+                    "CREATE UNIQUE INDEX IF NOT EXISTS uq_users_username_lower "
+                    "ON users(lower(username))"
+                )
+            )
 
 
 @app.on_event("startup")

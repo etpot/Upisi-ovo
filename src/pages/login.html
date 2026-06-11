@@ -41,22 +41,30 @@
                 </div>
 
                 <form id="auth-form" class="auth-form" novalidate>
-                    <label class="auth-field" id="field-name" hidden>
-                        <span>Ime</span>
+                    <label class="auth-field" id="field-identifier">
+                        <span>Korisničko ime ili email</span>
                         <input
                             type="text"
-                            id="auth-name"
-                            autocomplete="name"
-                            placeholder="Tvoje ime"
+                            id="auth-identifier"
+                            autocomplete="username"
+                            placeholder="djordje ili ime@primjer.com"
                         />
                     </label>
-                    <label class="auth-field">
+                    <label class="auth-field" id="field-username" hidden>
+                        <span>Korisničko ime</span>
+                        <input
+                            type="text"
+                            id="auth-username"
+                            autocomplete="username"
+                            placeholder="npr. djordje"
+                        />
+                    </label>
+                    <label class="auth-field" id="field-email" hidden>
                         <span>Email</span>
                         <input
                             type="email"
                             id="auth-email"
                             autocomplete="email"
-                            required
                             placeholder="ime@primjer.com"
                         />
                     </label>
@@ -72,7 +80,8 @@
                     </label>
 
                     <p class="auth-hint" id="register-hint" hidden>
-                        Lozinka mora imati najmanje 8 karaktera.
+                        Korisničko ime: 3–30 karaktera (slova, brojevi, . _ -),
+                        jedinstveno. Lozinka najmanje 8 karaktera.
                     </p>
                     <p class="auth-error" id="auth-error" hidden></p>
 

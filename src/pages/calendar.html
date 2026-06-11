@@ -58,7 +58,7 @@
             <a href="notes.html" class="topnav-segment topnav-notes">
                 <svg
                     viewBox="0 0 24 24"
-                    fill="#1f2937"
+                    fill="white"
                     xmlns="http://www.w3.org/2000/svg"
                 >
                     <circle cx="12" cy="12" r="8" />
@@ -72,8 +72,28 @@
         </header>
 
         <main class="section-content">
-            <p class="date" id="month-year"></p>
+            <div class="cal-nav">
+                <button
+                    class="cal-nav-arrow"
+                    id="cal-prev"
+                    type="button"
+                    aria-label="Prethodni mjesec"
+                >‹</button>
+                <button
+                    class="cal-nav-label date"
+                    id="month-year"
+                    type="button"
+                    aria-haspopup="true"
+                ></button>
+                <button
+                    class="cal-nav-arrow"
+                    id="cal-next"
+                    type="button"
+                    aria-label="Sljedeći mjesec"
+                >›</button>
+            </div>
             <div class="grid-container">
+                <div class="cal-weekdays" id="cal-weekdays"></div>
                 <div id="calendar"></div>
             </div>
         </main>

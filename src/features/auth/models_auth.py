@@ -14,6 +14,9 @@ class User(Base):
     __tablename__ = "users"
 
     id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
+    # Public handle chosen at registration. Unique case-insensitively (enforced
+    # both in app logic and by a functional unique index on lower(username)).
+    username: Mapped[str] = mapped_column(String(50), index=True, nullable=False)
     email: Mapped[str] = mapped_column(
         String(320), unique=True, index=True, nullable=False
     )

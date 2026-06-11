@@ -9,13 +9,6 @@
     </head>
     <body class="page-home">
         <script src="./auth.js"></script>
-        <button
-            class="logout-btn"
-            type="button"
-            onclick="window.UpisiAuth.logout()"
-        >
-            Odjava
-        </button>
         <nav class="topnav">
             <a href="todo.html" class="topnav-segment topnav-todo">
                 <svg
@@ -65,7 +58,7 @@
             <a href="notes.html" class="topnav-segment topnav-notes">
                 <svg
                     viewBox="0 0 24 24"
-                    fill="#1f2937"
+                    fill="white"
                     xmlns="http://www.w3.org/2000/svg"
                 >
                     <circle cx="12" cy="12" r="8" />
@@ -75,49 +68,69 @@
         </nav>
 
         <div class="home-grid">
+            <a href="calendar.html" class="home-tile home-tile-cal">
+                <div class="home-tile-head">
+                    <svg
+                        viewBox="0 0 24 24"
+                        stroke="white"
+                        stroke-width="2.5"
+                        fill="none"
+                        stroke-linecap="round"
+                        xmlns="http://www.w3.org/2000/svg"
+                    >
+                        <line x1="5" y1="5" x2="19" y2="19" />
+                        <line x1="19" y1="5" x2="5" y2="19" />
+                    </svg>
+                    <span class="home-tile-label">CALENDAR</span>
+                </div>
+                <div class="home-tile-body" id="home-cal">
+                    <p class="home-tile-empty">Učitavanje…</p>
+                </div>
+            </a>
             <a href="todo.html" class="home-tile home-tile-todo">
-                <svg
-                    viewBox="0 0 24 24"
-                    fill="white"
-                    xmlns="http://www.w3.org/2000/svg"
-                >
-                    <rect x="3" y="3" width="18" height="18" rx="2" />
-                </svg>
-                <span class="home-tile-label">TODO</span>
+                <div class="home-tile-head">
+                    <svg
+                        viewBox="0 0 24 24"
+                        fill="white"
+                        xmlns="http://www.w3.org/2000/svg"
+                    >
+                        <rect x="3" y="3" width="18" height="18" rx="2" />
+                    </svg>
+                    <span class="home-tile-label">TODO</span>
+                </div>
+                <div class="home-tile-body" id="home-todo">
+                    <p class="home-tile-empty">Učitavanje…</p>
+                </div>
             </a>
             <a href="obligations.html" class="home-tile home-tile-oblig">
-                <svg
-                    viewBox="0 0 24 24"
-                    fill="white"
-                    xmlns="http://www.w3.org/2000/svg"
-                >
-                    <polygon points="12,2 22,22 2,22" />
-                </svg>
-                <span class="home-tile-label">OBLIGATIONS</span>
-            </a>
-            <a href="calendar.html" class="home-tile home-tile-cal">
-                <svg
-                    viewBox="0 0 24 24"
-                    stroke="white"
-                    stroke-width="2.5"
-                    fill="none"
-                    stroke-linecap="round"
-                    xmlns="http://www.w3.org/2000/svg"
-                >
-                    <line x1="5" y1="5" x2="19" y2="19" />
-                    <line x1="19" y1="5" x2="5" y2="19" />
-                </svg>
-                <span class="home-tile-label">CALENDAR</span>
+                <div class="home-tile-head">
+                    <svg
+                        viewBox="0 0 24 24"
+                        fill="white"
+                        xmlns="http://www.w3.org/2000/svg"
+                    >
+                        <polygon points="12,2 22,22 2,22" />
+                    </svg>
+                    <span class="home-tile-label">OBLIGATIONS</span>
+                </div>
+                <div class="home-tile-body" id="home-oblig">
+                    <p class="home-tile-empty">Učitavanje…</p>
+                </div>
             </a>
             <a href="notes.html" class="home-tile home-tile-notes">
-                <svg
-                    viewBox="0 0 24 24"
-                    fill="#1f2937"
-                    xmlns="http://www.w3.org/2000/svg"
-                >
-                    <circle cx="12" cy="12" r="9" />
-                </svg>
-                <span class="home-tile-label">NOTES</span>
+                <div class="home-tile-head">
+                    <svg
+                        viewBox="0 0 24 24"
+                        fill="white"
+                        xmlns="http://www.w3.org/2000/svg"
+                    >
+                        <circle cx="12" cy="12" r="9" />
+                    </svg>
+                    <span class="home-tile-label">NOTES</span>
+                </div>
+                <div class="home-tile-body" id="home-notes">
+                    <p class="home-tile-empty">Uskoro…</p>
+                </div>
             </a>
         </div>
 
@@ -178,5 +191,6 @@
             </a>
         </nav>
         <script src="./cube-nav.js"></script>
+        <script src="./index.js"></script>
     </body>
 </html>

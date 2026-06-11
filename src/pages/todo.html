@@ -58,7 +58,7 @@
             <a href="notes.html" class="topnav-segment topnav-notes">
                 <svg
                     viewBox="0 0 24 24"
-                    fill="#1f2937"
+                    fill="white"
                     xmlns="http://www.w3.org/2000/svg"
                 >
                     <circle cx="12" cy="12" r="8" />
@@ -72,9 +72,8 @@
         </header>
 
         <main class="section-content">
-            <h3>Dnevna to-do lista</h3>
             <form id="todo-form" class="todo-entry-form">
-                <input id="todo-input" type="text" />
+                <input id="todo-input" type="text" placeholder="Nova stavka…" />
                 <div class="todo-action-row">
                     <button id="add-todo-btn" type="submit">Dodaj</button>
                     <button
@@ -86,7 +85,6 @@
                     >✕</button>
                 </div>
             </form>
-            <p></p>
             <p class="date" id="day-date"></p>
             <ul id="todo-list"></ul>
 

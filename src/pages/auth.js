@@ -47,10 +47,84 @@
     redirectToLogin();
   }
 
+  // ─── Shared user menu (☰ → username, settings, logout) ──────────
+  function injectUserMenu(user) {
+    if (document.getElementById("user-menu")) return;
+
+    const menu = document.createElement("div");
+    menu.className = "user-menu";
+    menu.id = "user-menu";
+
+    const toggle = document.createElement("button");
+    toggle.type = "button";
+    toggle.className = "user-menu-toggle";
+    toggle.setAttribute("aria-label", "Meni");
+    toggle.setAttribute("aria-expanded", "false");
+    toggle.innerHTML = "<span></span><span></span><span></span>";
+
+    const panel = document.createElement("div");
+    panel.className = "user-menu-panel";
+    panel.hidden = true;
+
+    const head = document.createElement("div");
+    head.className = "user-menu-head";
+    const name = document.createElement("span");
+    name.className = "user-menu-name";
+    name.textContent = `@${user.username}`;
+    const email = document.createElement("span");
+    email.className = "user-menu-email";
+    email.textContent = user.email || "";
+    head.appendChild(name);
+    head.appendChild(email);
+
+    const settingsItem = document.createElement("button");
+    settingsItem.type = "button";
+    settingsItem.className = "user-menu-item";
+    settingsItem.textContent = "Podešavanja";
+
+    const logoutItem = document.createElement("button");
+    logoutItem.type = "button";
+    logoutItem.className = "user-menu-item user-menu-logout";
+    logoutItem.textContent = "Odjava";
+
+    panel.appendChild(head);
+    panel.appendChild(settingsItem);
+    panel.appendChild(logoutItem);
+    menu.appendChild(toggle);
+    menu.appendChild(panel);
+    document.body.appendChild(menu);
+
+    function setOpen(open) {
+      panel.hidden = !open;
+      menu.classList.toggle("is-open", open);
+      toggle.setAttribute("aria-expanded", String(open));
+    }
+
+    toggle.addEventListener("click", (e) => {
+      e.stopPropagation();
+      setOpen(panel.hidden);
+    });
+    settingsItem.addEventListener("click", () => {
+      setOpen(false);
+      // Placeholder until the settings page is built.
+      alert("Podešavanja stižu uskoro.");
+    });
+    logoutItem.addEventListener("click", () => logout());
+
+    document.addEventListener("click", (e) => {
+      if (!menu.contains(e.target)) setOpen(false);
+    });
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "Escape") setOpen(false);
+    });
+  }
+
   window.UpisiAuth = { API_BASE, fetchMe, requireAuth, logout, redirectToLogin };
 
-  // Guard every page except the login screen itself.
+  // Guard every page except the login screen itself, then mount the menu.
   if (!document.body || !document.body.classList.contains("page-login")) {
-    requireAuth();
+    requireAuth().then((user) => {
+      if (user) injectUserMenu(user);
+    });
   }
 })();

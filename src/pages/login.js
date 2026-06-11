@@ -1,8 +1,14 @@
 const { API_BASE, fetchMe } = window.UpisiAuth;
 
+const USERNAME_RE = /^[A-Za-z0-9._-]{3,30}$/;
+const EMAIL_RE = /^[^@\s]+@[^@\s]+\.[^@\s]+$/;
+
 const form = document.getElementById("auth-form");
-const nameField = document.getElementById("field-name");
-const nameInput = document.getElementById("auth-name");
+const identifierField = document.getElementById("field-identifier");
+const usernameField = document.getElementById("field-username");
+const emailField = document.getElementById("field-email");
+const identifierInput = document.getElementById("auth-identifier");
+const usernameInput = document.getElementById("auth-username");
 const emailInput = document.getElementById("auth-email");
 const passwordInput = document.getElementById("auth-password");
 const submitBtn = document.getElementById("auth-submit");
@@ -26,8 +32,11 @@ function setMode(nextMode) {
     tab.classList.toggle("is-active", tab.dataset.tab === mode);
   });
 
-  nameField.hidden = !isRegister;
+  identifierField.hidden = isRegister;
+  usernameField.hidden = !isRegister;
+  emailField.hidden = !isRegister;
   registerHint.hidden = !isRegister;
+
   submitBtn.textContent = isRegister ? "Registruj se" : "Prijavi se";
   passwordInput.setAttribute(
     "autocomplete",
@@ -40,29 +49,42 @@ tabs.forEach((tab) => {
   tab.addEventListener("click", () => setMode(tab.dataset.tab));
 });
 
-form.addEventListener("submit", async (e) => {
-  e.preventDefault();
-  showError("");
-
-  const email = emailInput.value.trim();
+async function handleLogin() {
+  const identifier = identifierInput.value.trim();
   const password = passwordInput.value;
-  const fullName = nameInput.value.trim();
 
-  if (!email || !password) {
-    showError("Unesi email i lozinku.");
+  if (!identifier || !password) {
+    showError("Unesi korisničko ime/email i lozinku.");
     return;
   }
-  if (mode === "register" && password.length < 8) {
+
+  await submit("/auth/login", { identifier, password });
+}
+
+async function handleRegister() {
+  const username = usernameInput.value.trim();
+  const email = emailInput.value.trim();
+  const password = passwordInput.value;
+
+  if (!USERNAME_RE.test(username)) {
+    showError(
+      "Korisničko ime: 3–30 karaktera (slova, brojevi, . _ -).",
+    );
+    return;
+  }
+  if (!EMAIL_RE.test(email)) {
+    showError("Unesi ispravnu email adresu.");
+    return;
+  }
+  if (password.length < 8) {
     showError("Lozinka mora imati najmanje 8 karaktera.");
     return;
   }
 
-  const endpoint = mode === "register" ? "/auth/register" : "/auth/login";
-  const body =
-    mode === "register"
-      ? { email, password, full_name: fullName || null }
-      : { email, password };
+  await submit("/auth/register", { username, email, password });
+}
 
+async function submit(endpoint, body) {
   submitBtn.disabled = true;
   try {
     const res = await fetch(`${API_BASE}${endpoint}`, {
@@ -73,7 +95,7 @@ form.addEventListener("submit", async (e) => {
 
     if (!res.ok) {
       const data = await res.json().catch(() => ({}));
-      showError(data.detail || "Došlo je do greške. Pokušaj ponovo.");
+      showError(extractError(data) || "Došlo je do greške. Pokušaj ponovo.");
       return;
     }
 
@@ -83,6 +105,29 @@ form.addEventListener("submit", async (e) => {
     showError("Server nije dostupan. Provjeri da li backend radi.");
   } finally {
     submitBtn.disabled = false;
+  }
+}
+
+function extractError(data) {
+  if (!data || !data.detail) return "";
+  if (typeof data.detail === "string") return data.detail;
+  if (Array.isArray(data.detail)) {
+    const first = data.detail[0];
+    if (typeof first === "string") return first;
+    if (first && typeof first.msg === "string") {
+      return first.msg.replace(/^Value error,\s*/, "");
+    }
+  }
+  return "";
+}
+
+form.addEventListener("submit", async (e) => {
+  e.preventDefault();
+  showError("");
+  if (mode === "register") {
+    await handleRegister();
+  } else {
+    await handleLogin();
   }
 });
 

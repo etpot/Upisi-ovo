@@ -20,6 +20,8 @@ def create_event(
         date=payload.date,
         title=payload.title,
         description=payload.description,
+        start_time=payload.start_time,
+        end_time=payload.end_time,
         user_id=user_id,
     )
     db.add(event)

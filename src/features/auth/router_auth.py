@@ -38,12 +38,17 @@ def register(
             status_code=status.HTTP_409_CONFLICT,
             detail="Nalog sa ovom email adresom već postoji.",
         )
+    if crud_auth.get_user_by_username(db, payload.username):
+        raise HTTPException(
+            status_code=status.HTTP_409_CONFLICT,
+            detail="Korisničko ime je već zauzeto.",
+        )
 
     user = crud_auth.create_user(
         db,
+        username=payload.username,
         email=payload.email,
         hashed_password=security.hash_password(payload.password),
-        full_name=payload.full_name,
         provider="local",
     )
     _set_session_cookie(response, user.id)
@@ -56,11 +61,11 @@ def login(
     response: Response,
     db: Session = Depends(get_db),
 ):
-    user = crud_auth.get_user_by_email(db, payload.email)
+    user = crud_auth.get_user_by_identifier(db, payload.identifier)
     if not user or not security.verify_password(payload.password, user.hashed_password):
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Pogrešan email ili lozinka.",
+            detail="Pogrešno korisničko ime/email ili lozinka.",
         )
     _set_session_cookie(response, user.id)
     return user
@@ -130,8 +135,15 @@ async def oauth_callback(provider: str, request: Request, db: Session = Depends(
     email = email.strip().lower()
     user = crud_auth.get_user_by_email(db, email)
     if not user:
+        username = crud_auth.generate_unique_username(
+            db, name or email.split("@", 1)[0]
+        )
         user = crud_auth.create_user(
-            db, email=email, hashed_password=None, full_name=name, provider=provider
+            db,
+            username=username,
+            email=email,
+            hashed_password=None,
+            provider=provider,
         )
 
     redirect = RedirectResponse(url=config.FRONTEND_URL)

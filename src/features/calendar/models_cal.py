@@ -18,4 +18,7 @@ class CalendarEvent(Base):
     date: Mapped[date] = mapped_column(Date, index=True, nullable=False)
     title: Mapped[str] = mapped_column(String(255), nullable=False)
     description: Mapped[str | None] = mapped_column(String(7000), nullable=True)
+    # 24h "HH:MM" strings; nullable so events can stay time-less.
+    start_time: Mapped[str | None] = mapped_column(String(5), nullable=True)
+    end_time: Mapped[str | None] = mapped_column(String(5), nullable=True)
     created_at: Mapped[datetime] = mapped_column(DateTime, server_default=func.now())
