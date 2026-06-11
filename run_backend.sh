@@ -20,7 +20,7 @@ PY
     exit 1
   fi
 
-  exec "$VENV_PY" -m uvicorn src.main:app --reload --host 127.0.0.1 --port 8000 --app-dir "$ROOT_DIR"
+  exec "$VENV_PY" -m uvicorn src.main:app --reload --host 0.0.0.0 --port 8000 --app-dir "$ROOT_DIR"
 fi
 
 echo "Virtual environment not found at $ROOT_DIR/.venv."

@@ -73,7 +73,7 @@ cd /home/djordje/UpisiOvo
 python3 -m venv .venv
 source .venv/bin/activate
 pip install -r requirements.txt
-uvicorn src.main:app --reload --host 127.0.0.1 --port 8000
+uvicorn src.main:app --reload --host 0.0.0.0 --port 8000
 ```
 
 Or from anywhere:
@@ -97,6 +97,23 @@ Open: **`http://127.0.0.1:5500/pages/login.html`**
 > `127.0.0.1:8000`; `localhost` and `127.0.0.1` are treated as different sites, so a
 > SameSite=Lax cookie set for `127.0.0.1` would not be sent from a `localhost` page —
 > you'd be stuck in a login loop. Pick one host and use it everywhere.
+
+### 3) Testing from a phone (or any device on the same Wi-Fi)
+
+Find your machine's local IP:
+```bash
+ip addr show | grep "inet " | grep -v 127.0.0.1
+# look for something like 192.168.x.x
+```
+
+Start backend and frontend exactly as above (both already bind to `0.0.0.0`).  
+On the phone, open:
+```
+http://192.168.x.x:5500/pages/login.html
+```
+Replace `192.168.x.x` with your actual LAN IP. No other changes needed — `auth.js`
+automatically uses the hostname the page was loaded from, so API calls go to
+`192.168.x.x:8000` instead of `127.0.0.1:8000`.
 
 ---
 

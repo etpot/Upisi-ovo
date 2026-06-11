@@ -2,7 +2,7 @@
 // Wrapped in an IIFE so it doesn't collide with `API_BASE` declared in the
 // other page scripts (classic scripts all share one global scope).
 (() => {
-  const API_BASE = "http://127.0.0.1:8000";
+  const API_BASE = `http://${window.location.hostname}:8000`;
 
   // Make sure the HttpOnly session cookie is sent on every cross-origin API
   // call. Patching fetch here means the existing page scripts need no changes.
