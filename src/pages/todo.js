@@ -1,4 +1,4 @@
-const API_BASE = "http://127.0.0.1:8000";
+const API_BASE = window.UpisiAuth.API_BASE;
 
 const todoList = document.getElementById("todo-list");
 const todoInput = document.getElementById("todo-input");
@@ -279,3 +279,13 @@ document.addEventListener("DOMContentLoaded", async () => {
 
 window.deleteSelectedTodos = deleteSelectedTodos;
 window.loadDay = loadDay;
+
+document.addEventListener("keydown", async (e) => {
+  if (e.key !== "Delete") return;
+  if (!isDeleteMode || selectedTodoIds.size === 0) return;
+  const active = document.activeElement;
+  if (active?.tagName === "TEXTAREA") return;
+  if (active?.tagName === "INPUT" && active.type !== "checkbox") return;
+  e.preventDefault();
+  await deleteSelectedTodos();
+});

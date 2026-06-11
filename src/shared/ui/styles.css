@@ -23,7 +23,14 @@
 }
 
 html {
-    zoom: 1.65;
+    zoom: 1;
+    -webkit-text-size-adjust: 100%;
+    text-size-adjust: 100%;
+}
+
+/* Zoom only on true desktop — iPads (up to 1024px landscape) stay at zoom:1 */
+@media (min-width: 1100px) {
+    html { zoom: 1.65; }
 }
 
 body {
@@ -2112,4 +2119,303 @@ body.page-login {
     font-size: 1.1rem;
     font-weight: 800;
     color: var(--cal-clr);
+}
+
+/* ─── Tablet / iPad overrides (769 – 1099px) ────────────────────── */
+
+@media (min-width: 769px) and (max-width: 1099px) {
+    /* Loosen the 60/85% desktop constraints on tablets */
+    body.page-cal .section-content,
+    body.page-todo .section-content {
+        max-width: 88%;
+    }
+    body.page-oblig .section-content {
+        max-width: 96%;
+    }
+
+    /* Solid calendar numbers — Safari stroke effect looks bad on medium cells */
+    #calendar > div {
+        color: rgba(255, 255, 255, 0.88);
+        -webkit-text-stroke-width: 0;
+    }
+}
+
+/* ─── Mobile / phone overrides (≤ 768px) ────────────────────────── */
+
+@media (max-width: 768px) {
+    /* Remove desktop-only width constraints — take full card width */
+    body.page-cal .section-content,
+    body.page-todo .section-content,
+    body.page-oblig .section-content {
+        max-width: none;
+        margin: 1rem 0.8rem 1.5rem;
+    }
+
+    /* Obligations: collapse 3 columns into 1 */
+    .obligations-columns {
+        grid-template-columns: 1fr;
+    }
+
+    /* Obligation form: wrap action buttons to a new line */
+    .obligation-entry-form {
+        flex-wrap: wrap;
+    }
+    .obligation-date-input {
+        flex: 1 1 auto;
+    }
+    .obligation-action-row {
+        width: 100%;
+        flex-wrap: wrap;
+    }
+    .obligation-action-btn {
+        flex: 1;
+    }
+
+    /* Hamburger: stay at top, scroll away with page (not fixed) */
+    .user-menu {
+        position: absolute;
+        top: 0.7rem;
+        right: 0.8rem;
+    }
+
+    /* Calendar: solid numbers instead of stroke-outline effect */
+    #calendar > div {
+        color: rgba(255, 255, 255, 0.88);
+        -webkit-text-stroke-width: 0;
+    }
+
+    /* Section header: relative so hamburger anchors correctly */
+    .section-header {
+        position: relative;
+    }
+
+    /* Prevent title text from sitting under hamburger */
+    .section-header h1 {
+        padding-right: 3rem;
+    }
+
+    /* iOS Safari: inputs < 16px trigger viewport auto-zoom on focus */
+    input,
+    textarea,
+    select {
+        font-size: 1rem;
+    }
+}
+
+/* ─── Dark mode (body.dark) ─────────────────────────────────────── */
+
+body.dark {
+    --bg:     #181A1B;
+    --panel:  #1e2123;
+    --ink:    #e4e2de;
+    --muted:  #8a9199;
+    --line:   #2c3033;
+    --accent: #5ab0cb;
+}
+
+/* Inputs — override all hardcoded cream/white backgrounds */
+body.dark input:not([type="checkbox"]):not([type="radio"]),
+body.dark textarea,
+body.dark select {
+    background: #252a2d;
+    color: var(--ink);
+    border-color: var(--line);
+}
+
+body.dark input::placeholder,
+body.dark textarea::placeholder {
+    color: var(--muted);
+}
+
+/* Auth page */
+body.dark .auth-tabs {
+    background: rgba(255, 255, 255, 0.06);
+}
+body.dark .auth-tab.is-active {
+    background: #2a2f32;
+    color: var(--ink);
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.4);
+}
+body.dark .auth-social-btn {
+    background: #252a2d;
+    border-color: var(--line);
+    color: var(--ink);
+}
+body.dark .auth-divider { color: var(--muted); }
+
+/* Calendar page — picker and event overlay */
+body.dark .cal-picker-month {
+    background: #252a2d;
+    border-color: var(--line);
+    color: var(--ink);
+}
+body.dark .cal-picker-month:hover {
+    background: rgba(90, 176, 203, 0.15);
+}
+body.dark .cal-picker-month.is-current {
+    background: var(--cal-clr);
+    border-color: var(--cal-clr);
+    color: #fff;
+}
+body.dark .cal-event-item {
+    background: rgba(30, 58, 110, 0.4);
+}
+body.dark .cal-ro-item {
+    background: rgba(255, 255, 255, 0.05);
+}
+body.dark .cal-empty-hint { color: var(--muted); }
+body.dark .time-picker {
+    background: rgba(90, 176, 203, 0.07);
+}
+body.dark .time-picker::before {
+    background: rgba(90, 176, 203, 0.15);
+}
+
+/* Todo list items */
+body.dark #todo-list li,
+body.dark [id^="todo-list-"] li,
+body.dark #load-todos-list li {
+    background: rgba(45, 106, 79, 0.22);
+}
+body.dark #todo-list li:hover {
+    background: rgba(45, 106, 79, 0.33);
+}
+body.dark .loaded-day-page li {
+    background: rgba(255, 255, 255, 0.04) !important;
+}
+
+/* User menu */
+body.dark .user-menu-item:hover {
+    background: rgba(255, 255, 255, 0.07);
+}
+
+/* Table */
+body.dark th {
+    background: #252a2d;
+}
+body.dark th,
+body.dark td {
+    border-color: var(--line);
+}
+
+/* Panel (old board-style panels if used) */
+body.dark .panel {
+    background: var(--panel);
+    border-color: var(--line);
+}
+
+/* Dark mode toggle row */
+.user-menu-dark {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.6rem;
+    cursor: pointer;
+}
+
+.dark-toggle-label {
+    color: var(--ink);
+    font-size: 0.9rem;
+    font-weight: 600;
+}
+
+.dark-toggle-track {
+    flex-shrink: 0;
+    width: 38px;
+    height: 22px;
+    border-radius: 11px;
+    background: var(--line);
+    position: relative;
+    transition: background 0.22s;
+}
+
+.dark-toggle-track.is-on {
+    background: var(--accent);
+}
+
+.dark-toggle-thumb {
+    position: absolute;
+    top: 3px;
+    left: 3px;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background: #fff;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.25);
+    transition: transform 0.22s cubic-bezier(0.34, 1.3, 0.64, 1);
+}
+
+.dark-toggle-track.is-on .dark-toggle-thumb {
+    transform: translateX(16px);
+}
+
+body.dark .dark-toggle-label {
+    color: var(--ink);
+}
+
+/* ── Topnav & bottombar: muted section colours in dark mode ────── */
+
+body.dark .topnav-todo              { background: #1a3d28; }
+body.dark .topnav-oblig             { background: #4a1818; }
+body.dark .topnav-cal               { background: #0b1a38; }
+body.dark .topnav-notes             { background: #4a3208; }
+body.dark .topnav-add               { filter: brightness(0.55); }
+
+body.dark .bottombar-todo           { background: #1a3d28; }
+body.dark .bottombar-oblig          { background: #4a1818; }
+body.dark .bottombar-cal            { background: #0b1a38; }
+body.dark .bottombar-notes          { background: #4a3208; }
+body.dark .bottombar-add            { filter: brightness(0.55); }
+
+/* ── Section page body backgrounds ────────────────────────────── */
+
+body.dark.page-todo                 { background: #121f18; }
+body.dark.page-oblig                { background: #1c0e0e; }
+body.dark.page-cal                  { background: #070f1f; }
+body.dark.page-notes                { background: #1c1403; }
+
+/* Section header overlay – slightly heavier in dark mode */
+body.dark.page-todo .section-header,
+body.dark.page-oblig .section-header,
+body.dark.page-cal .section-header,
+body.dark.page-notes .section-header {
+    background: rgba(0, 0, 0, 0.50);
+}
+
+/* ── Home tiles: muted in dark mode ────────────────────────────── */
+
+body.dark .home-tile-todo           { background: #1a3d28; }
+body.dark .home-tile-oblig          { background: #4a1818; }
+body.dark .home-tile-cal            { background: #0b1a38; }
+body.dark .home-tile-notes          { background: #4a3208; }
+
+/* ── Home mini-calendar: reduce white ──────────────────────────── */
+
+body.dark .home-cal-weekdays span {
+    color: rgba(255, 255, 255, 0.38);
+}
+body.dark .home-cal-day {
+    color: rgba(255, 255, 255, 0.55);
+}
+body.dark .home-cal-day.is-today {
+    background: rgba(255, 255, 255, 0.75);
+    color: #0b1a38;
+}
+body.dark .home-cal-day.has-dot::after {
+    background: rgba(255, 255, 255, 0.55);
+}
+
+/* ── Home obligations widget ───────────────────────────────────── */
+
+body.dark .home-oblig-list li {
+    background: rgba(255, 255, 255, 0.07);
+}
+body.dark .home-oblig-head {
+    border-bottom-color: rgba(255, 255, 255, 0.25);
+}
+
+/* ── Home todo widget ──────────────────────────────────────────── */
+
+body.dark .home-todo-item {
+    background: rgba(255, 255, 255, 0.07);
 }

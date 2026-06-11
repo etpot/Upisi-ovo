@@ -4,6 +4,13 @@
 (() => {
   const API_BASE = `http://${window.location.hostname}:8000`;
 
+  // ─── Dark mode ──────────────────────────────────────────────────
+  const DARK_KEY = "upisiovo-dark";
+  function applyDarkMode(on) {
+    document.body.classList.toggle("dark", on);
+  }
+  applyDarkMode(localStorage.getItem(DARK_KEY) === "1");
+
   // Make sure the HttpOnly session cookie is sent on every cross-origin API
   // call. Patching fetch here means the existing page scripts need no changes.
   const origFetch = window.fetch.bind(window);
@@ -82,6 +89,38 @@
     settingsItem.className = "user-menu-item";
     settingsItem.textContent = "Podešavanja";
 
+    const darkItem = document.createElement("button");
+    darkItem.type = "button";
+    darkItem.className = "user-menu-item user-menu-dark";
+    darkItem.setAttribute("role", "switch");
+
+    const darkLabel = document.createElement("span");
+    darkLabel.className = "dark-toggle-label";
+    darkLabel.textContent = "Tamni mod";
+
+    const darkTrack = document.createElement("span");
+    darkTrack.className = "dark-toggle-track";
+    const darkThumb = document.createElement("span");
+    darkThumb.className = "dark-toggle-thumb";
+    darkTrack.appendChild(darkThumb);
+
+    darkItem.appendChild(darkLabel);
+    darkItem.appendChild(darkTrack);
+
+    function syncDarkToggle() {
+      const on = document.body.classList.contains("dark");
+      darkItem.setAttribute("aria-checked", String(on));
+      darkTrack.classList.toggle("is-on", on);
+    }
+    syncDarkToggle();
+
+    darkItem.addEventListener("click", () => {
+      const next = !document.body.classList.contains("dark");
+      applyDarkMode(next);
+      localStorage.setItem(DARK_KEY, next ? "1" : "0");
+      syncDarkToggle();
+    });
+
     const logoutItem = document.createElement("button");
     logoutItem.type = "button";
     logoutItem.className = "user-menu-item user-menu-logout";
@@ -89,6 +128,7 @@
 
     panel.appendChild(head);
     panel.appendChild(settingsItem);
+    panel.appendChild(darkItem);
     panel.appendChild(logoutItem);
     menu.appendChild(toggle);
     menu.appendChild(panel);

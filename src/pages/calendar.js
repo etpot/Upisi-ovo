@@ -1,4 +1,4 @@
-const API_BASE = "http://127.0.0.1:8000";
+const API_BASE = window.UpisiAuth.API_BASE;
 
 const calendar_div = document.getElementById("calendar");
 const month_year = document.getElementById("month-year");

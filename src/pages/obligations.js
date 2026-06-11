@@ -1,4 +1,4 @@
-const API_BASE_OBLIGATIONS = "http://127.0.0.1:8000";
+const API_BASE_OBLIGATIONS = window.UpisiAuth.API_BASE;
 
 const obligationInput = document.getElementById("obligation-item-input");
 const obligationDateInput = document.getElementById("obligation-date-input");
@@ -292,3 +292,13 @@ obligationsPanel?.addEventListener("change", async (event) => {
 });
 
 void loadAllObligations();
+
+document.addEventListener("keydown", async (e) => {
+  if (e.key !== "Delete") return;
+  if (!obligationDeleteModeActive || selectedObligationItemIds.size === 0) return;
+  const active = document.activeElement;
+  if (active?.tagName === "TEXTAREA") return;
+  if (active?.tagName === "INPUT" && active.type !== "checkbox") return;
+  e.preventDefault();
+  await deleteSelectedObligationItems();
+});
